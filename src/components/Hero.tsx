@@ -54,10 +54,13 @@ const Hero = () => {
         loop
         muted
         playsInline
-        preload="metadata"
+        preload="none"
         poster={heroPosterUrl}
         disablePictureInPicture
         disableRemotePlayback
+        x5-video-player-type="h5"
+        x5-playsinline="true"
+        webkit-playsinline="true"
       >
         <source src={heroVideoUrl} type="video/mp4" />
       </video>
