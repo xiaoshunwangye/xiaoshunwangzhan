@@ -6,7 +6,7 @@ import react from "@vitejs/plugin-react";
 // - 生产构建 (npm run build)：默认 base 为 "/portfolio-site/" → 适配 GitHub Pages
 // - 自定义域名：构建时设置 VITE_BASE="/" 即可
 // - Vercel/Netlify：构建时设置 VITE_BASE="/"
-const REPO_NAME = "portfolio-site";
+const REPO_NAME = "xiaoshunwangzhan";
 
 export default defineConfig(({ mode }) => {
   const isDev = mode === "development";
