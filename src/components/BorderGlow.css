@@ -12,6 +12,9 @@
   isolation: isolate;
   transform: translate3d(0, 0, 0.01px);
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  width: 100%;
+  max-width: 100%;
   border: 1px solid rgb(255 255 255 / 15%);
   background: var(--card-bg, transparent);
   overflow: visible;
@@ -107,7 +110,8 @@
 }
 
 .border-glow-inner {
-  display: flex;
+  display: fvisible;
+  min-width: 0
   flex-direction: column;
   position: relative;
   overflow: auto;

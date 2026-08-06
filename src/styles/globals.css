@@ -287,8 +287,9 @@ a {
   font-weight: 700;
   color: #f0f9ff;
   line-height: 1.25;
-  word-break: keep-all;
+  word-break: normal;
   overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .contact-wrap p {
@@ -296,6 +297,8 @@ a {
   margin: 10px 0;
   font-size: 1.05rem;
   font-weight: 400;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .experience-grid {
@@ -459,6 +462,11 @@ a {
   place-items: center;
   padding: 80px 60px;
   background: linear-gradient(180deg, #050609 0%, #0b1019 100%);
+}
+
+.contact-section > * {
+  width: 100%;
+  max-width: 720px;
 }
 
 @keyframes drift {
@@ -639,14 +647,16 @@ a {
   .contact-wrap h2 {
     font-size: clamp(1.5rem, 7vw, 2rem);
     line-height: 1.25;
-    word-break: keep-all;
+    word-break: normal;
     overflow-wrap: break-word;
+    white-space: normal;
   }
 
   .contact-wrap p {
     font-size: 0.95rem;
     margin: 8px 0;
-    word-break: break-all;
+    word-break: normal;
+    overflow-wrap: anywhere;
   }
 }
 

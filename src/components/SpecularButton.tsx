@@ -148,37 +148,60 @@ const SpecularButton: React.FC<SpecularButtonProps> = ({
     const fx = fxRef.current;
     if (!btn || !fx) return;
 
+    // 检测 WebGL 支持（夸克/部分国产浏览器对 WebGL 支持差，降级到 CSS 边框）
+    const probe = document.createElement('canvas');
+    const probeCtx = probe.getContext('webgl2') || probe.getContext('webgl');
+    if (!probeCtx) {
+      btn.classList.add('specular-button--fallback');
+      return;
+    }
+
     const dpr = window.devicePixelRatio || 1;
-    const renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr });
-    const gl = renderer.gl;
-    gl.clearColor(0, 0, 0, 0);
-    gl.enable(gl.BLEND);
-    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
+    let renderer: Renderer;
+    let gl: any;
+    let geometry: any;
+    let program: any;
+    let mesh: any;
+    try {
+      renderer = new Renderer({ alpha: true, premultipliedAlpha: true, antialias: true, dpr });
+      gl = renderer.gl;
+      gl.clearColor(0, 0, 0, 0);
+      gl.enable(gl.BLEND);
+      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);
 
-    const geometry = new Triangle(gl);
-    if (geometry.attributes.uv) delete geometry.attributes.uv;
+      geometry = new Triangle(gl);
+      if (geometry.attributes.uv) delete geometry.attributes.uv;
 
-    const program = new Program(gl, {
-      vertex: VERT,
-      fragment: FRAG,
-      uniforms: {
-        uCenter: { value: [0, 0] },
-        uHalfSize: { value: [1, 1] },
-        uRadius: { value: 0 },
-        uAngle: { value: 2.4 },
-        uPx: { value: dpr },
-        uLineColor: { value: [1, 1, 1] },
-        uBaseColor: { value: [0.32, 0.32, 0.32] },
-        uIntensity: { value: 1 },
-        uShineSize: { value: 0.17 },
-        uShineFade: { value: 0.7 },
-        uThickness: { value: 1 },
-        uBaseWidth: { value: dpr }
+      program = new Program(gl, {
+        vertex: VERT,
+        fragment: FRAG,
+        uniforms: {
+          uCenter: { value: [0, 0] },
+          uHalfSize: { value: [1, 1] },
+          uRadius: { value: 0 },
+          uAngle: { value: 2.4 },
+          uPx: { value: dpr },
+          uLineColor: { value: [1, 1, 1] },
+          uBaseColor: { value: [0.32, 0.32, 0.32] },
+          uIntensity: { value: 1 },
+          uShineSize: { value: 0.17 },
+          uShineFade: { value: 0.7 },
+          uThickness: { value: 1 },
+          uBaseWidth: { value: dpr }
+        }
+      });
+
+      mesh = new Mesh(gl, { geometry, program });
+      fx.appendChild(gl.canvas);
+    } catch (err) {
+      // WebGL 初始化失败（夸克等浏览器），降级到 CSS 边框
+      btn.classList.add('specular-button--fallback');
+      // 清理可能已附加的 canvas，避免黑块
+      if (gl && gl.canvas && gl.canvas.parentNode) {
+        gl.canvas.parentNode.removeChild(gl.canvas);
       }
-    });
-
-    const mesh = new Mesh(gl, { geometry, program });
-    fx.appendChild(gl.canvas);
+      return;
+    }
 
     const sizeRef = { w: 1, h: 1 };
     const resize = () => {

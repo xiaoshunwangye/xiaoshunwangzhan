@@ -16,6 +16,8 @@
   letter-spacing: 0.01em;
   line-height: 1;
   color: var(--sb-text-color);
+  /* 兼容夸克等不支持 color-mix() 的浏览器：使用 rgba 透明背景作为默认值 */
+  background: rgba(255, 255, 255, 0);
   background: color-mix(in srgb, var(--sb-tint) calc(var(--sb-tint-opacity) * 100%), transparent);
   border-radius: var(--sb-radius);
   backdrop-filter: blur(var(--sb-blur));
@@ -67,15 +69,47 @@
   inset: -20px;
   pointer-events: none;
   z-index: 1;
+  /* 默认透明，避免 WebGL 初始化失败时显示为黑块 */
+  background: transparent;
 }
 
 .specular-button__fx canvas {
   display: block;
   width: 100%;
   height: 100%;
+  background: transparent;
+}
+
+/* WebGL 不可用时彻底隐藏 fx 容器，避免黑块 */
+.specular-button--fallback .specular-button__fx {
+  display: none;
 }
 
 .specular-button__label {
   position: relative;
   z-index: 2;
+}
+
+/* 降级方案：WebGL 不可用时（夸克/部分国产浏览器）使用 CSS 边框 + 渐变模拟镜面效果 */
+.specular-button--fallback {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 50%, rgba(255, 255, 255, 0.06) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.specular-button--fallback::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.1) 30%, rgba(255, 255, 255, 0.05) 70%, rgba(255, 255, 255, 0.4) 100%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
 }
