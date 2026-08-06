@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react';
 import SpecularButton from './SpecularButton';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import heroVideoUrl from '/hero-video.mp4?url';
+import heroPosterUrl from '/IMG_3602.JPG?url';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -53,11 +55,11 @@ const Hero = () => {
         muted
         playsInline
         preload="metadata"
-        poster="/IMG_3602.JPG"
+        poster={heroPosterUrl}
         disablePictureInPicture
         disableRemotePlayback
       >
-        <source src="/hero-video.mp4" type="video/mp4" />
+        <source src={heroVideoUrl} type="video/mp4" />
       </video>
       <div className="hero-overlay" />
       <div className="hero-inner">
