@@ -53,7 +53,7 @@ const Hero = () => {
         muted
         playsInline
         preload="metadata"
-        poster="/hero-poster.jpg"
+        poster="/IMG_3602.JPG"
         disablePictureInPicture
         disableRemotePlayback
       >
