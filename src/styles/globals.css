@@ -283,13 +283,11 @@ a {
 
 .contact-wrap h2 {
   margin: 0 0 24px;
-  font-size: clamp(1.6rem, 4vw, 3rem);
+  font-size: clamp(1.2rem, 3vw, 2.2rem);
   font-weight: 700;
   color: #f0f9ff;
   line-height: 1.25;
-  word-break: normal;
-  overflow-wrap: break-word;
-  white-space: normal;
+  white-space: nowrap;
 }
 
 .contact-wrap p {
@@ -645,11 +643,9 @@ a {
   }
 
   .contact-wrap h2 {
-    font-size: clamp(1.5rem, 7vw, 2rem);
+    font-size: clamp(1.1rem, 5vw, 1.6rem);
     line-height: 1.25;
-    word-break: normal;
-    overflow-wrap: break-word;
-    white-space: normal;
+    white-space: nowrap;
   }
 
   .contact-wrap p {
@@ -680,6 +676,6 @@ a {
   }
 
   .contact-wrap h2 {
-    font-size: 1.4rem;
+    font-size: 1.05rem;
   }
 }
