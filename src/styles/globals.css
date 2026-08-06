@@ -283,10 +283,12 @@ a {
 
 .contact-wrap h2 {
   margin: 0 0 24px;
-  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-size: clamp(1.6rem, 4vw, 3rem);
   font-weight: 700;
   color: #f0f9ff;
-  line-height: 1.2;
+  line-height: 1.25;
+  word-break: keep-all;
+  overflow-wrap: break-word;
 }
 
 .contact-wrap p {
@@ -524,5 +526,150 @@ a {
   .projects-grid,
   .strengths-grid {
     gap: 22px;
+  }
+}
+
+/* Mobile / narrow screen fixes */
+@media (max-width: 768px) {
+  .hero-inner {
+    padding: 24px 20px;
+    gap: 48px;
+  }
+
+  .hero-nav {
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .hero-nav .logo {
+    font-size: 0.8rem;
+    letter-spacing: 0.18em;
+  }
+
+  .hero-nav nav {
+    gap: 14px;
+  }
+
+  .hero-nav a {
+    font-size: 0.85rem;
+  }
+
+  .hero-content h1 {
+    font-size: clamp(2rem, 8vw, 2.8rem);
+    line-height: 1.05;
+  }
+
+  .hero-copy {
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .page-content {
+    padding: 50px 20px;
+    gap: 60px;
+  }
+
+  .content-section h2 {
+    font-size: 1.9rem;
+  }
+
+  /* Experience card: stack avatar above text */
+  .profile-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 24px 20px;
+    gap: 18px;
+  }
+
+  .avatar {
+    width: 96px;
+    height: 96px;
+  }
+
+  .profile-copy h3 {
+    font-size: 1.2rem;
+    margin-bottom: 12px;
+  }
+
+  .profile-copy p {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .stat-card {
+    padding: 20px 18px;
+  }
+
+  .stat-card span {
+    font-size: 1.9rem;
+  }
+
+  /* Project & strength cards */
+  .project-card,
+  .project-card .border-glow-card {
+    min-height: 260px;
+    padding: 22px;
+  }
+
+  .project-card h3 {
+    font-size: 1.25rem;
+  }
+
+  .strength-card {
+    padding: 22px;
+    min-height: 180px;
+  }
+
+  .strength-card h3 {
+    font-size: 1.15rem;
+  }
+
+  /* Contact section: fix the cramped title */
+  .contact-section {
+    padding: 40px 16px;
+    min-height: auto;
+  }
+
+  .contact-wrap {
+    padding: 40px 24px;
+    align-items: flex-start;
+  }
+
+  .contact-wrap h2 {
+    font-size: clamp(1.5rem, 7vw, 2rem);
+    line-height: 1.25;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+
+  .contact-wrap p {
+    font-size: 0.95rem;
+    margin: 8px 0;
+    word-break: break-all;
+  }
+}
+
+@media (max-width: 420px) {
+  .hero-inner {
+    padding: 20px 16px;
+  }
+
+  .hero-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .page-content {
+    padding: 40px 16px;
+  }
+
+  .contact-wrap {
+    padding: 32px 18px;
+  }
+
+  .contact-wrap h2 {
+    font-size: 1.4rem;
   }
 }
