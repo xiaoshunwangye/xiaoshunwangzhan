@@ -56,6 +56,16 @@ const Hero = () => {
       // 尝试立即播放
       tryPlay();
 
+      // 微信 X5 内核特殊处理：通过 WeixinJSBridge 触发播放
+      const handleWeixinReady = () => {
+        tryPlay();
+      };
+      if (typeof (window as any).WeixinJSBridge !== 'undefined') {
+        (window as any).WeixinJSBridge.invoke('getNetworkType', {}, handleWeixinReady);
+      } else {
+        document.addEventListener('WeixinJSBridgeReady', handleWeixinReady, false);
+      }
+
       // 监听首次用户交互（点击/触摸/滚动/键盘）
       const events: Array<keyof DocumentEventMap> = ['click', 'touchstart', 'scroll', 'keydown'];
       const onUserInteract = () => {
@@ -63,6 +73,13 @@ const Hero = () => {
         events.forEach((evt) => document.removeEventListener(evt, onUserInteract));
       };
       events.forEach((evt) => document.addEventListener(evt, onUserInteract, { once: true, passive: true }));
+
+      // iPad 微信特殊处理：监听 visibilitychange，页面可见时尝试播放
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+          tryPlay();
+        }
+      });
     }
 
     return () => {
@@ -87,6 +104,7 @@ const Hero = () => {
         x5-video-orientation="portrait"
         x5-playsinline="true"
         webkit-playsinline="true"
+        onContextMenu={(e) => e.preventDefault()}
       >
         <source src={heroVideoUrl} type="video/mp4" />
       </video>
