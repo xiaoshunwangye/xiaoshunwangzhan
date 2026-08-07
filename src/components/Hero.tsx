@@ -41,6 +41,30 @@ const Hero = () => {
       delay: 1.5
     });
 
+    // Autoplay fallback: 浏览器自动播放策略阻止时，在首次用户交互后播放
+    const video = hero.querySelector('video');
+    if (video) {
+      const tryPlay = () => {
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {
+            // 自动播放被阻止，等待用户交互
+          });
+        }
+      };
+
+      // 尝试立即播放
+      tryPlay();
+
+      // 监听首次用户交互（点击/触摸/滚动/键盘）
+      const events: Array<keyof DocumentEventMap> = ['click', 'touchstart', 'scroll', 'keydown'];
+      const onUserInteract = () => {
+        tryPlay();
+        events.forEach((evt) => document.removeEventListener(evt, onUserInteract));
+      };
+      events.forEach((evt) => document.addEventListener(evt, onUserInteract, { once: true, passive: true }));
+    }
+
     return () => {
       tl.kill();
     };
