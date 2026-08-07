@@ -113,7 +113,7 @@ const Hero = () => {
       <div className="hero-inner">
         <header className="hero-nav">
           <PillNav
-            logo="/wanhuatong.png"
+            logo={`${import.meta.env.BASE_URL}wanhuatong.png`}
             logoAlt="平面设计 / 电商视觉"
             items={[
               { label: '经历', href: '#experience' },
