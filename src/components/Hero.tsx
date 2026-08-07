@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import SpecularButton from './SpecularButton';
+import PillNav from './PillNav';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import heroVideoUrl from '/hero-video.mp4?url';
@@ -111,13 +112,23 @@ const Hero = () => {
       <div className="hero-overlay" />
       <div className="hero-inner">
         <header className="hero-nav">
-          <div className="logo">平面设计 / 电商视觉</div>
-          <nav>
-            <a href="#experience">经历</a>
-            <a href="#projects">作品</a>
-            <a href="#strengths">优势</a>
-            <a href="#contact">联系</a>
-          </nav>
+          <PillNav
+            logo="/wanhuatong.png"
+            logoAlt="平面设计 / 电商视觉"
+            items={[
+              { label: '经历', href: '#experience' },
+              { label: '作品', href: '#projects' },
+              { label: '优势', href: '#strengths' },
+              { label: '联系', href: '#contact' }
+            ]}
+            activeHref="#experience"
+            ease="power2.easeOut"
+            baseColor="transparent"
+            pillColor="transparent"
+            hoveredPillTextColor="#ffffff"
+            pillTextColor="#ffffff"
+            initialLoadAnimation
+          />
         </header>
         <div className="hero-content">
           <p className="eyebrow">平面设计 · 电商视觉 · 短视频内容 · AI 辅助</p>

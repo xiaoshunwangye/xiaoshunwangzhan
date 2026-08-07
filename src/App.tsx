@@ -2,6 +2,7 @@ import Hero from "./components/Hero";
 import Experience from "./components/Experience";
 import FeaturedProjects from "./components/FeaturedProjects";
 import Strengths from "./components/Strengths";
+import SkillsBento from "./components/SkillsBento";
 import Contact from "./components/Contact";
 import Ferrofluid from "./components/Ferrofluid";
 
@@ -32,6 +33,8 @@ function App() {
           <Experience />
           <FeaturedProjects />
           <Strengths />
+          <SkillsBento />
+
         </div>
       </main>
       <Contact />
