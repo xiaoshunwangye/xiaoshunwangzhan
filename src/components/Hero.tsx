@@ -50,15 +50,17 @@ const Hero = () => {
     <section className="hero-section" ref={heroRef}>
       <video
         className="hero-video"
+        src={heroVideoUrl}
         autoPlay
         loop
         muted
         playsInline
-        preload="none"
+        preload="metadata"
         poster={heroPosterUrl}
         disablePictureInPicture
         disableRemotePlayback
         x5-video-player-type="h5"
+        x5-video-orientation="portrait"
         x5-playsinline="true"
         webkit-playsinline="true"
       >
