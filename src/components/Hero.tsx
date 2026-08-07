@@ -111,7 +111,7 @@ const Hero = () => {
       <div className="hero-overlay" />
       <div className="hero-inner">
         <header className="hero-nav">
-          <div className="logo">视觉 / AI / 品牌</div>
+          <div className="logo">平面设计 / 电商视觉</div>
           <nav>
             <a href="#experience">经历</a>
             <a href="#projects">作品</a>
@@ -120,10 +120,11 @@ const Hero = () => {
           </nav>
         </header>
         <div className="hero-content">
-          <p className="eyebrow">视觉设计师 · AI 设计师 · 品牌设计师</p>
-          <h1>用视觉与科技构建高级品牌表达</h1>
+          <p className="eyebrow">平面设计 · 电商视觉 · 短视频内容 · AI 辅助</p>
+          <h1>用电商视觉与短视频内容讲好产品故事</h1>
           <p className="hero-copy">
-            专注于品牌策略、数字体验与沉浸式视觉系统，打造高级、克制、有质感的作品。
+            平面设计专业在读，专注电商主图、详情页与短视频内容设计，
+            把产品卖点转化为清晰、有吸引力的视觉表达。
           </p>
           <SpecularButton
             size="lg"

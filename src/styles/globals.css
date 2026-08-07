@@ -307,15 +307,25 @@ a {
 
 .profile-card {
   display: flex;
-  gap: 24px;
+  gap: 32px;
   align-items: center;
-  padding: 32px;
+  justify-content: center;
+  padding: 36px 32px;
   background: transparent;
+  text-align: center;
+  width: 100%;
+}
+
+.profile-copy {
+  text-align: left;
+  flex: 0 1 auto;
+  max-width: 560px;
 }
 
 .avatar {
   width: 132px;
   height: 132px;
+  flex-shrink: 0;
   border-radius: 50%;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
@@ -323,20 +333,31 @@ a {
 }
 
 .profile-copy h3 {
-  margin: 0 0 18px;
+  margin: 0 0 14px;
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
 }
 
 .profile-copy p {
   margin: 0;
   color: #c8d1e5;
-  line-height: 1.85;
+  line-height: 1.8;
+  font-size: 0.98rem;
 }
 
 .contact-meta {
-  margin-top: 24px;
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   display: grid;
-  gap: 10px;
+  gap: 8px;
   color: #aab2c8;
+  font-size: 0.92rem;
+}
+
+.contact-meta p {
+  margin: 0;
+  line-height: 1.6;
 }
 
 .experience-stats {
@@ -452,6 +473,136 @@ a {
   margin: 16px 0 0;
   color: #c8d1e5;
   line-height: 1.8;
+}
+
+/* Timeline */
+.timeline {
+  margin-top: 60px;
+  display: grid;
+  gap: 24px;
+  position: relative;
+  padding-left: 28px;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.timeline-item {
+  position: relative;
+  padding: 24px 28px;
+  border-radius: 20px;
+  background: transparent;
+  transition: transform 0.3s ease;
+}
+
+.timeline-item:hover {
+  transform: translateY(-2px);
+}
+
+.timeline-marker {
+  position: absolute;
+  left: -36px;
+  top: 32px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
+}
+
+.timeline-period {
+  display: inline-block;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  color: #06b6d4;
+  margin-bottom: 8px;
+}
+
+.timeline-role {
+  margin: 0 0 12px;
+  font-size: 1.2rem;
+  color: #f0f9ff;
+}
+
+.timeline-company {
+  color: #aab2c8;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.timeline-summary {
+  margin: 0 0 14px;
+  color: #c8d1e5;
+  line-height: 1.8;
+}
+
+.timeline-highlights {
+  margin: 0;
+  padding-left: 18px;
+  color: #aab2c8;
+  line-height: 1.9;
+}
+
+.timeline-highlights li {
+  margin-bottom: 4px;
+}
+
+/* Project card extras */
+.project-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.project-tag {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(6, 182, 212, 0.16);
+  color: #67e8f9;
+  border: 1px solid rgba(6, 182, 212, 0.32);
+}
+
+.project-year {
+  color: #aab2c8;
+}
+
+.project-stack {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.project-stack li {
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #c8d1e5;
+}
+
+/* Strength points */
+.strength-points {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.strength-points li {
+  font-size: 0.78rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(95, 160, 255, 0.08);
+  border: 1px solid rgba(95, 160, 255, 0.18);
+  color: #c8d1e5;
 }
 
 .contact-section {
@@ -588,11 +739,6 @@ a {
     gap: 18px;
   }
 
-  .avatar {
-    width: 96px;
-    height: 96px;
-  }
-
   .profile-copy h3 {
     font-size: 1.2rem;
     margin-bottom: 12px;
@@ -629,6 +775,34 @@ a {
 
   .strength-card h3 {
     font-size: 1.15rem;
+  }
+
+  /* Timeline on mobile */
+  .timeline {
+    padding-left: 20px;
+    margin-top: 40px;
+  }
+
+  .timeline-item {
+    padding: 18px 20px;
+  }
+
+  .timeline-marker {
+    left: -28px;
+    width: 12px;
+    height: 12px;
+  }
+
+  .timeline-role {
+    font-size: 1.05rem;
+  }
+
+  .timeline-summary {
+    font-size: 0.95rem;
+  }
+
+  .timeline-highlights {
+    font-size: 0.9rem;
   }
 
   /* Contact section: fix the cramped title */

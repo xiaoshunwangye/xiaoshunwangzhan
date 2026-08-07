@@ -73,10 +73,12 @@ const Contact = () => {
       >
         <div className="contact-wrap">
           <span className="section-label">联系我</span>
-          <h2>准备好一起做出下一个高级项目了吗？</h2>
+          <h2>期待加入佛山的设计团队，一起做好项目</h2>
+          <p>姓名：杨大顺</p>
+          <p>电话：19860398304</p>
           <p>邮箱：15113609996@163.com</p>
           <p>微信：Y-18-86-ds</p>
-          <p>电话：+86 198 6039 8304</p>
+          <p>求职意向：设计 · 期望城市：佛山 · 期望薪资：5-8K</p>
         </div>
       </BorderGlow>
     </section>
