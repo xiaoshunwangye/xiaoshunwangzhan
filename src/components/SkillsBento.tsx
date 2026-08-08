@@ -14,25 +14,61 @@ const SkillsBento = () => {
     if (!section) return;
 
     const ctx = gsap.context(() => {
-      gsap.from('.skills-bento-section .section-header > *', {
-        scrollTrigger: {
-          trigger: section,
-          start: 'top 80%',
-          end: 'top 30%',
-          scrub: 1,
-        },
-        y: 30,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-      });
+      // 标题动画
+      gsap.fromTo('.skills-bento-section .section-label',
+        { x: -40, opacity: 0 },
+        {
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+          x: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: 'power2.out',
+        }
+      );
+
+      gsap.fromTo('.skills-bento-section h2',
+        { y: 40, opacity: 0 },
+        {
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 80%',
+            toggleActions: 'play none none reverse',
+          },
+          y: 0,
+          opacity: 1,
+          duration: 0.8,
+          ease: 'power2.out',
+        }
+      );
+
+      // 卡片动画 - 依次出现
+      gsap.fromTo('.skills-bento-section .magic-bento-card',
+        { y: 60, opacity: 0, scale: 0.9 },
+        {
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 70%',
+            toggleActions: 'play none none reverse',
+          },
+          y: 0,
+          opacity: 1,
+          scale: 1,
+          duration: 0.8,
+          stagger: 0.15,
+          ease: 'power2.out',
+        }
+      );
     }, section);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={sectionRef} id="skills" className="skills-bento-section">
+    <section id="skills" ref={sectionRef} className="skills-bento-section">
       <div className="section-head">
         <span className="section-label">专业技能</span>
         <h2>我掌握的工具与能力</h2>
