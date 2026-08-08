@@ -32,10 +32,10 @@ const SkillsBento = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="skills-bento-section">
-      <div className="section-header">
-        <span className="eyebrow">SKILLS</span>
-        <h2>专业技能</h2>
+    <section ref={sectionRef} id="skills" className="skills-bento-section">
+      <div className="section-head">
+        <span className="section-label">专业技能</span>
+        <h2>我掌握的工具与能力</h2>
       </div>
       <MagicBento
         textAutoHide={true}
@@ -47,7 +47,7 @@ const SkillsBento = () => {
         clickEffect={true}
         spotlightRadius={300}
         particleCount={12}
-        glowColor="6, 182, 212"
+        glowColor="132, 0, 255"
       />
     </section>
   );

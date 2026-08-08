@@ -10,27 +10,39 @@ const MOBILE_BREAKPOINT = 768;
 const cardData = [
   {
     color: 'transparent',
-    title: '视觉设计',
-    description: 'Photoshop / Illustrator / Figma',
+    title: 'Photoshop / Illustrator / Figma',
+    description: '主图 / 详情页 / 海报设计',
     label: '视觉设计'
   },
   {
     color: 'transparent',
-    title: '视频制作',
-    description: '剪映 / After Effects / Premiere Pro',
+    title: '剪映 / After Effects / Premiere',
+    description: '短视频剪辑 / 动态字幕 / 特效',
     label: '视频制作'
   },
   {
     color: 'transparent',
-    title: 'AI 工具',
-    description: 'Midjourney / Stable Diffusion / 提示词工程',
+    title: 'Midjourney / Stable Diffusion',
+    description: 'AI 绘图 / 提示词工程 / 素材生成',
     label: 'AI 工具'
   },
   {
     color: 'transparent',
-    title: '其他技能',
-    description: '版式设计 / 色彩构成 / 产品修图 / 调色',
-    label: '其他技能'
+    title: '主图 / 详情页 / 活动海报',
+    description: '电商视觉规范 / 转化导向设计',
+    label: '电商设计'
+  },
+  {
+    color: 'transparent',
+    title: '精修 / 调色 / 色彩构成',
+    description: '产品质感 / 卖点突出 / 视觉吸引力',
+    label: '产品修图'
+  },
+  {
+    color: 'transparent',
+    title: '排版 / 构图 / 视觉层级',
+    description: '信息清晰 / 节奏感 / 阅读体验',
+    label: '版式设计'
   }
 ];
 
@@ -333,6 +345,7 @@ interface GlobalSpotlightProps {
   enabled?: boolean;
   spotlightRadius?: number;
   glowColor?: string;
+  enableMagnetism?: boolean;
 }
 
 const GlobalSpotlight = ({
@@ -340,7 +353,8 @@ const GlobalSpotlight = ({
   disableAnimations = false,
   enabled = true,
   spotlightRadius = DEFAULT_SPOTLIGHT_RADIUS,
-  glowColor = DEFAULT_GLOW_COLOR
+  glowColor = DEFAULT_GLOW_COLOR,
+  enableMagnetism = true
 }: GlobalSpotlightProps) => {
   const spotlightRef = useRef<HTMLDivElement | null>(null);
   const isInsideSection = useRef(false);
@@ -448,7 +462,8 @@ const GlobalSpotlight = ({
     const handleMouseLeave = () => {
       isInsideSection.current = false;
       gridRef.current?.querySelectorAll('.magic-bento-card').forEach(card => {
-        (card as HTMLElement).style.setProperty('--glow-intensity', '0');
+        const cardElement = card as HTMLElement;
+        cardElement.style.setProperty('--glow-intensity', '0');
       });
       if (spotlightRef.current) {
         gsap.to(spotlightRef.current, {
@@ -467,7 +482,7 @@ const GlobalSpotlight = ({
       document.removeEventListener('mouseleave', handleMouseLeave);
       spotlightRef.current?.parentNode?.removeChild(spotlightRef.current);
     };
-  }, [gridRef, disableAnimations, enabled, spotlightRadius, glowColor]);
+  }, [gridRef, disableAnimations, enabled, spotlightRadius, glowColor, enableMagnetism]);
 
   return null;
 };
@@ -539,6 +554,7 @@ const MagicBento = ({
           enabled={enableSpotlight}
           spotlightRadius={spotlightRadius}
           glowColor={glowColor}
+          enableMagnetism={enableMagnetism}
         />
       )}
 

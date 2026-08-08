@@ -119,6 +119,7 @@ const Hero = () => {
               { label: '经历', href: '#experience' },
               { label: '作品', href: '#projects' },
               { label: '优势', href: '#strengths' },
+              { label: '技能', href: '#skills' },
               { label: '联系', href: '#contact' }
             ]}
             activeHref="#experience"
