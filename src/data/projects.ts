@@ -1,5 +1,8 @@
 ﻿import type { Project, ProjectCategory } from '../types/project';
 
+// 统一处理 public 资源路径，兼容 GitHub Pages 子目录部署
+const asset = (path: string) => `${import.meta.env.BASE_URL}${path.replace(/^\//, '')}`;
+
 export const CATEGORY_COLORS: Record<ProjectCategory, { glow: string; glowRgba: string }> = {
   '电商设计': { glow: '280 85% 65%', glowRgba: 'hsla(280, 85%, 65%, 1)' },
   '短视频内容': { glow: '190 80% 60%', glowRgba: 'hsla(190, 80%, 60%, 1)' },
@@ -27,7 +30,7 @@ export const projects: Project[] = [
     stack: ['Photoshop', 'Illustrator', '详情页排版', '活动海报'],
     coverGradient: 'linear-gradient(135deg, #EC4899 0%, #F59E0B 100%)',
     coverIcon: '🛍️',
-    coverImg: '/wanhuatong.png',
+    coverImg: asset('/wanhuatong.png'),
     highlights: [
       '独立完成产品主图与详情页设计，遵循平台视觉规范',
       '对产品图片进行精修与调色处理，突出产品卖点',
@@ -79,7 +82,7 @@ export const projects: Project[] = [
     stack: ['剪映', 'After Effects', '产品拍摄', '动态字幕'],
     coverGradient: 'linear-gradient(135deg, #06B6D4 0%, #3B82F6 50%, #8B5CF6 100%)',
     coverIcon: '🎬',
-    coverVideo: '/hero-video.mp4',
+    coverVideo: asset('/hero-video.mp4'),
     highlights: [
       '使用剪映 / After Effects 完成多条电商产品短视频剪辑',
       '结合产品实拍素材优化视频节奏与画面表现',
