@@ -34,10 +34,18 @@ const AudioPlayer = () => {
 
   // 自动扫描播放列表
   useEffect(() => {
-    fetch('/audio-list.json')
-      .then(res => res.json())
+    const baseUrl = import.meta.env.BASE_URL.replace(/\/$/, '');
+    fetch(`${baseUrl}/audio-list.json`)
+      .then(res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
       .then(data => {
-        const tracks = data.playlist || [];
+        const base = import.meta.env.BASE_URL;
+        const tracks = (data.playlist || []).map((track: Track) => ({
+          ...track,
+          src: track.src.startsWith('/') ? base + track.src.slice(1) : track.src,
+        }));
         setPlaylist(tracks);
         // 加载完成后立即给 audio 设置初始 src，否则 audio.play() 会因无 src 而失败
         if (tracks.length > 0 && audioRef.current) {
@@ -45,8 +53,9 @@ const AudioPlayer = () => {
           audioRef.current.load();
         }
       })
-      .catch(() => {
-        // 如果配置文件不存在，使用空播放列表
+      .catch((err) => {
+        // 如果配置文件不存在或请求失败，使用空播放列表
+        console.error('[AudioPlayer] failed to load playlist:', err);
         setPlaylist([]);
       });
   }, []);
