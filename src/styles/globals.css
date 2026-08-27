@@ -377,6 +377,128 @@ a {
   overflow-wrap: break-word;
 }
 
+/* Contact 信息块 */
+.contact-info {
+  display: grid;
+  gap: 6px;
+  margin: 8px 0 28px;
+  padding: 18px 24px;
+  border-radius: 16px;
+  background: rgba(184, 134, 11, 0.06);
+  border: 1px solid rgba(184, 134, 11, 0.18);
+  width: 100%;
+  max-width: 560px;
+}
+
+.contact-info p {
+  margin: 0;
+  color: #f0d68a;
+  font-size: 0.95rem;
+  text-align: left;
+}
+
+/* Contact 表单 */
+.contact-form {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+.contact-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.contact-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.contact-form-field label {
+  font-size: 0.82rem;
+  color: #f0d68a;
+  letter-spacing: 0.05em;
+}
+
+.contact-form-field input,
+.contact-form-field textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid rgba(184, 134, 11, 0.25);
+  background: rgba(255, 255, 255, 0.03);
+  color: #f5f5f5;
+  font: inherit;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+  resize: vertical;
+}
+
+.contact-form-field input::placeholder,
+.contact-form-field textarea::placeholder {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.contact-form-field input:focus,
+.contact-form-field textarea:focus {
+  outline: none;
+  border-color: rgba(184, 134, 11, 0.7);
+  background: rgba(184, 134, 11, 0.06);
+}
+
+.contact-form-field input[aria-invalid="true"],
+.contact-form-field textarea[aria-invalid="true"] {
+  border-color: rgba(239, 68, 68, 0.6);
+  background: rgba(239, 68, 68, 0.05);
+}
+
+.contact-form-error {
+  font-size: 0.8rem;
+  color: #fca5a5;
+}
+
+.contact-form-submit {
+  margin-top: 8px;
+  padding: 12px 28px;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #b8860b, #daa520);
+  color: #0d1117;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  align-self: flex-start;
+}
+
+.contact-form-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(184, 134, 11, 0.35);
+}
+
+.contact-form-success {
+  margin: 4px 0 0;
+  color: #86efac;
+  font-size: 0.92rem;
+}
+
+@media (max-width: 640px) {
+  .contact-form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-form-submit {
+    align-self: stretch;
+  }
+}
+
 .experience-grid {
   display: grid;
   gap: 30px;
@@ -472,22 +594,23 @@ a {
 
 .project-card {
   position: relative;
-  min-height: 360px;
+  height: 520px;
   border-radius: 32px;
   background: transparent;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
   padding: 28px;
-  transition: transform 0.3s ease;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.35s ease;
 }
 
 .project-card:hover {
   transform: translateY(-6px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
 }
 
 .project-card .border-glow-card {
-  min-height: 360px;
+  height: 520px;
   padding: 28px;
   display: flex;
   flex-direction: column;
@@ -623,6 +746,44 @@ a {
   margin-bottom: 4px;
 }
 
+/* Timeline 可展开交互 */
+.timeline-item {
+  cursor: pointer;
+  user-select: none;
+}
+
+.timeline-item:focus-visible {
+  outline: 2px solid rgba(6, 182, 212, 0.6);
+  outline-offset: 4px;
+}
+
+.timeline-item.is-expanded {
+  background: rgba(6, 182, 212, 0.04);
+}
+
+.timeline-collapsible {
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease, margin 0.3s ease;
+  margin-top: 0;
+}
+
+.timeline-item.is-expanded .timeline-collapsible {
+  margin-top: 14px;
+}
+
+.timeline-toggle {
+  display: inline-block;
+  margin-top: 12px;
+  font-size: 0.82rem;
+  color: #67e8f9;
+  letter-spacing: 0.05em;
+  transition: color 0.2s ease;
+}
+
+.timeline-item:hover .timeline-toggle {
+  color: #f0f9ff;
+}
+
 /* Project card extras */
 .project-meta {
   display: flex;
@@ -637,9 +798,35 @@ a {
 .project-tag {
   padding: 4px 10px;
   border-radius: 999px;
-  background: rgba(6, 182, 212, 0.16);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  border: 1px solid;
+  background: transparent;
+}
+
+.project-tag[data-category="电商设计"] {
+  color: #f0abfc;
+  border-color: rgba(240, 171, 252, 0.35);
+  background: rgba(240, 171, 252, 0.1);
+}
+
+.project-tag[data-category="短视频内容"] {
   color: #67e8f9;
-  border: 1px solid rgba(6, 182, 212, 0.32);
+  border-color: rgba(103, 232, 249, 0.35);
+  background: rgba(103, 232, 249, 0.1);
+}
+
+.project-tag[data-category="AI 探索"] {
+  color: #c4b5fd;
+  border-color: rgba(196, 181, 253, 0.35);
+  background: rgba(196, 181, 253, 0.1);
+}
+
+.project-tag[data-category="课程实践"] {
+  color: #6ee7b7;
+  border-color: rgba(110, 231, 183, 0.35);
+  background: rgba(110, 231, 183, 0.1);
 }
 
 .project-year {
@@ -825,6 +1012,369 @@ a {
     color: #b8860b;
     letter-spacing: 0.12em;
     text-transform: uppercase;
+  }
+}
+
+/* ============================================
+   Featured Projects - 分类筛选 + 弹窗
+   ============================================ */
+
+.project-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 0 0 32px;
+}
+
+.project-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+  color: #c8d1e5;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  font-family: inherit;
+}
+
+.project-filter-btn:hover {
+  border-color: rgba(6, 182, 212, 0.4);
+  color: #f0f9ff;
+  background: rgba(6, 182, 212, 0.08);
+}
+
+.project-filter-btn.is-active {
+  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(139, 92, 246, 0.25));
+  border-color: rgba(6, 182, 212, 0.6);
+  color: #f0f9ff;
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+}
+
+.project-filter-count {
+  display: inline-grid;
+  place-items: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 0.75rem;
+  color: #aab2c8;
+}
+
+.project-filter-btn.is-active .project-filter-count {
+  background: rgba(6, 182, 212, 0.3);
+  color: #f0f9ff;
+}
+
+.project-card {
+  cursor: default;
+}
+
+.project-cover-btn {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  border: none;
+  border-radius: 20px;
+  margin-bottom: 18px;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  padding: 0 0 28px;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  transition: transform 0.3s ease;
+}
+
+/* 类别专属渐变背景 */
+.project-cover-btn.category-电商设计 {
+  background: linear-gradient(135deg, #2d1b4e 0%, #1a0a2e 100%);
+}
+
+.project-cover-btn.category-短视频内容 {
+  background: linear-gradient(135deg, #0c3547 0%, #0a1f2e 100%);
+}
+
+.project-cover-btn.category-AI探索 {
+  background: linear-gradient(135deg, #1e1b4b 0%, #0f0a2e 100%);
+}
+
+.project-cover-btn.category-课程实践 {
+  background: linear-gradient(135deg, #0a2e1f 0%, #071a12 100%);
+}
+
+.project-card:hover .project-cover-btn {
+  transform: scale(1.02);
+}
+
+.project-cover-btn:focus-visible {
+  outline: 3px solid rgba(6, 182, 212, 0.8);
+  outline-offset: 4px;
+}
+
+.project-cover-icon {
+  font-size: 4rem;
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+.project-cover-img,
+.project-cover-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+}
+
+.project-cover-label {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+  pointer-events: none;
+  white-space: nowrap;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
+  letter-spacing: 0.02em;
+}
+
+/* 封面区域渐变遮罩层 */
+.project-cover-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 20px;
+  background: linear-gradient(to top, rgba(5, 6, 9, 0.75) 0%, transparent 55%);
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.project-empty {
+  text-align: center;
+  color: #aab2c8;
+  padding: 60px 0;
+  font-size: 1rem;
+}
+
+/* 弹窗内详情 */
+.project-detail-cover {
+  width: 100%;
+  border-radius: 0;
+  overflow: visible;
+  margin-bottom: 20px;
+  background: transparent;
+  box-shadow: none;
+  position: static;
+}
+
+.project-detail-cover::before {
+  display: none;
+}
+
+.project-detail-img,
+.project-detail-video {
+  width: 100%;
+  display: block;
+}
+
+.project-detail-video-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.project-detail-video-wrap::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.08));
+  pointer-events: none;
+}
+
+.project-detail-video {
+  width: 100%;
+  height: auto;
+  max-height: 420px;
+  object-fit: contain;
+  background: #0a0a0a;
+  border-radius: 0;
+}
+
+.project-detail-img-wrap {
+  width: 100%;
+  display: block;
+}
+
+.project-detail-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.project-detail-cover.gradient-cover {
+  height: 160px;
+  display: grid;
+  place-items: center;
+}
+
+.project-detail-cover.gradient-cover .project-cover-icon {
+  font-size: 3.5rem;
+  filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.5));
+}
+
+/* 弹窗内容区 */
+.project-detail {
+  padding-top: 4px;
+}
+
+.project-detail-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.project-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background: rgba(6, 182, 212, 0.12);
+  border: 1px solid rgba(6, 182, 212, 0.25);
+  border-radius: 20px;
+  font-size: 0.75rem;
+  color: #67e8f9;
+  letter-spacing: 0.04em;
+}
+
+.project-year {
+  font-size: 0.8rem;
+  color: #64748b;
+  letter-spacing: 0.04em;
+}
+
+.project-detail-desc {
+  font-size: 0.95rem;
+  line-height: 1.75;
+  color: #cbd5e1;
+  margin: 0 0 20px;
+  padding: 16px 20px;
+  background: rgba(255, 255, 255, 0.015);
+  border-radius: 10px;
+  border-left: 2px solid rgba(6, 182, 212, 0.4);
+}
+
+.project-detail h4 {
+  margin: 0 0 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #67e8f9;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.project-detail ul {
+  margin: 0 0 20px;
+  padding-left: 18px;
+}
+
+.project-detail li {
+  margin-bottom: 6px;
+  color: #94a3b8;
+  line-height: 1.6;
+  font-size: 0.92rem;
+}
+
+.project-stack--inline {
+  margin-top: 10px !important;
+}
+
+.project-stack--inline li {
+  display: inline-block;
+  padding: 4px 12px;
+  margin: 4px 6px 4px 0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.project-stack--inline {
+  margin-top: 12px !important;
+}
+
+.project-detail-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+
+.project-detail-btn {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 22px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 500;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.project-detail-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.35);
+}
+
+.project-detail-btn--ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f0f9ff;
+}
+
+.project-detail-btn--ghost:hover {
+  border-color: rgba(6, 182, 212, 0.6);
+  background: rgba(6, 182, 212, 0.08);
+  box-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .project-filters {
+    gap: 8px;
+  }
+
+  .project-filter-btn {
+    padding: 6px 14px;
+    font-size: 0.85rem;
+  }
+
+  .project-cover-btn {
+    height: 140px;
+  }
+
+  .project-cover-icon {
+    font-size: 3rem;
+  }
+}
+
+/* ============================================
+   Skills Bento - 移动端
+   ============================================ */
+@media (max-width: 768px) {
+  #skills-bento .magic-bento-card__label {
     font-size: 0.75rem;
   }
 

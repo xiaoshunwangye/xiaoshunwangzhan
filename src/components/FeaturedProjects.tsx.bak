@@ -1,0 +1,385 @@
+import { useEffect, useMemo, useRef, useState } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import BorderGlow from './BorderGlow';
+import Modal from './Modal';
+import { projects, PROJECT_CATEGORIES } from '../data/projects';
+import type { Project, ProjectCategory } from '../types/project';
+
+gsap.registerPlugin(ScrollTrigger);
+
+type FilterValue = ProjectCategory | 'all';
+
+const FeaturedProjects = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [filter, setFilter] = useState<FilterValue>('all');
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const [galleryTab, setGalleryTab] = useState<'imgs' | 'videos'>('imgs');
+  const [currentImgIdx, setCurrentImgIdx] = useState(0);
+  const [currentVideoIdx, setCurrentVideoIdx] = useState(0);
+
+  const filteredProjects = useMemo(() => {
+    if (filter === 'all') return projects;
+    return projects.filter((p) => p.category === filter);
+  }, [filter]);
+
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const ctx = gsap.context(() => {
+      const label = section.querySelector('.section-label');
+      const title = section.querySelector('h2');
+
+      if (label) {
+        gsap.fromTo(label,
+          { x: -40, opacity: 0 },
+          {
+            x: 0,
+            opacity: 1,
+            duration: 0.6,
+            ease: 'power2.out',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 75%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
+
+      if (title) {
+        gsap.fromTo(title,
+          { y: 60, opacity: 0, scale: 0.85 },
+          {
+            y: 0,
+            opacity: 1,
+            scale: 1,
+            duration: 0.9,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: section,
+              start: 'top 70%',
+              toggleActions: 'play none none reverse',
+            },
+          }
+        );
+      }
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
+  // 筛选切换时给卡片一个轻量入场动画
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const cards = section.querySelectorAll('.projects-grid > *');
+    if (cards.length === 0) return;
+    gsap.fromTo(
+      cards,
+      { y: 24, opacity: 0, scale: 0.97 },
+      { y: 0, opacity: 1, scale: 1, duration: 0.45, stagger: 0.06, ease: 'power2.out' }
+    );
+  }, [filter]);
+
+  return (
+    <section id="projects" className="content-section" ref={sectionRef}>
+      <div className="section-head">
+        <span className="section-label">精选项目</span>
+        <h2>代表作品</h2>
+      </div>
+
+      <div className="project-filters" role="tablist" aria-label="作品分类筛选">
+        {PROJECT_CATEGORIES.map((cat) => (
+          <button
+            key={cat.value}
+            type="button"
+            role="tab"
+            aria-selected={filter === cat.value}
+            className={`project-filter-btn ${filter === cat.value ? 'is-active' : ''}`}
+            onClick={() => setFilter(cat.value)}
+          >
+            {cat.label}
+            {cat.value !== 'all' && (
+              <span className="project-filter-count">
+                {projects.filter((p) => p.category === cat.value).length}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      <div className="projects-grid">
+        {filteredProjects.map((item) => (
+          <article className="project-card" key={item.id}>
+            <BorderGlow
+              edgeSensitivity={30}
+              glowColor="190 80 60"
+              backgroundColor="transparent"
+              borderRadius={32}
+              glowRadius={40}
+              glowIntensity={1.0}
+              coneSpread={25}
+              animated={false}
+              colors={['#06B6D4', '#3B82F6', '#8B5CF6']}
+              fillOpacity={0}
+            >
+              <button
+                type="button"
+                className="project-cover-btn"
+                onClick={() => setActiveProject(item)}
+                aria-label={`查看 ${item.title} 详情`}
+              >
+                {item.coverVideo ? (
+                  <video
+                    src={item.coverVideo}
+                    className="project-cover-video"
+                    muted
+                    loop
+                    autoPlay
+                    playsInline
+                    poster={item.coverImg || undefined}
+                  />
+                ) : item.coverImg ? (
+                  <img
+                    src={item.coverImg}
+                    alt={item.title}
+                    className="project-cover-img"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span className="project-cover-icon">{item.coverIcon}</span>
+                )}
+                <span className="project-cover-label">{item.title}</span>
+              </button>
+              <div className="project-copy">
+                <div className="project-meta">
+                  <span className="project-tag">{item.category}</span>
+                  <span className="project-year">{item.year}</span>
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.summary}</p>
+                <ul className="project-stack">
+                  {item.stack.slice(0, 4).map((tech) => (
+                    <li key={tech}>{tech}</li>
+                  ))}
+                </ul>
+              </div>
+            </BorderGlow>
+          </article>
+        ))}
+      </div>
+
+      {filteredProjects.length === 0 && (
+        <p className="project-empty">该分类下暂无作品</p>
+      )}
+
+      <Modal
+        open={activeProject !== null}
+        onClose={() => {
+          setActiveProject(null);
+          setGalleryTab('imgs');
+          setCurrentImgIdx(0);
+          setCurrentVideoIdx(0);
+        }}
+        title={activeProject?.title}
+        maxWidth={800}
+      >
+        {activeProject && (() => {
+          const hasGallery = (activeProject.galleryImgs?.length ?? 0) > 0 || (activeProject.videos?.length ?? 0) > 0;
+          const galleryImgs = activeProject.galleryImgs ?? [];
+          const galleryVideos = activeProject.videos ?? [];
+          return (
+            <div className="project-detail">
+              {/* 多图/多视频区域 */}
+              {hasGallery ? (
+                <>
+                  {(galleryImgs.length > 0 || galleryVideos.length > 0) && (
+                    <div className="project-gallery-tabs">
+                      {galleryImgs.length > 0 && (
+                        <button
+                          className={`project-gallery-tab ${galleryTab === 'imgs' ? 'is-active' : ''}`}
+                          onClick={() => { setGalleryTab('imgs'); setCurrentImgIdx(0); }}
+                        >
+                          📷 图片 ({galleryImgs.length})
+                        </button>
+                      )}
+                      {galleryVideos.length > 0 && (
+                        <button
+                          className={`project-gallery-tab ${galleryTab === 'videos' ? 'is-active' : ''}`}
+                          onClick={() => { setGalleryTab('videos'); setCurrentVideoIdx(0); }}
+                        >
+                          🎬 视频 ({galleryVideos.length})
+                        </button>
+                      )}
+                    </div>
+                  )}
+                  {galleryTab === 'imgs' && galleryImgs.length > 0 && (
+                    <div className="project-detail-cover project-detail-img-wrap">
+                      <img
+                        src={galleryImgs[currentImgIdx]}
+                        alt={`${activeProject.title} - 图片 ${currentImgIdx + 1}`}
+                        className="project-detail-img"
+                      />
+                      {galleryImgs.length > 1 && (
+                        <div className="project-gallery-nav">
+                          <button
+                            className="project-gallery-btn"
+                            onClick={() => setCurrentImgIdx(i => Math.max(0, i - 1))}
+                            disabled={currentImgIdx === 0}
+                          >‹</button>
+                          <span className="project-gallery-count">{currentImgIdx + 1} / {galleryImgs.length}</span>
+                          <button
+                            className="project-gallery-btn"
+                            onClick={() => setCurrentImgIdx(i => Math.min(galleryImgs.length - 1, i + 1))}
+                            disabled={currentImgIdx === galleryImgs.length - 1}
+                          >›</button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  {galleryTab === 'videos' && galleryVideos.length > 0 && (
+                    <div className="project-detail-cover project-detail-video-wrap">
+                      <video
+                        src={galleryVideos[currentVideoIdx]}
+                        className="project-detail-video"
+                        controls
+                        muted
+                        loop
+                        playsInline
+                      />
+                      {galleryVideos.length > 1 && (
+                        <div className="project-gallery-nav">
+                          <button
+                            className="project-gallery-btn"
+                            onClick={() => setCurrentVideoIdx(i => Math.max(0, i - 1))}
+                            disabled={currentVideoIdx === 0}
+                          >‹</button>
+                          <span className="project-gallery-count">{currentVideoIdx + 1} / {galleryVideos.length}</span>
+                          <button
+                            className="project-gallery-btn"
+                            onClick={() => setCurrentVideoIdx(i => Math.min(galleryVideos.length - 1, i + 1))}
+                            disabled={currentVideoIdx === galleryVideos.length - 1}
+                          >›</button>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </>
+              ) : activeProject.coverVideo ? (
+                <div className="project-detail-cover project-detail-video-wrap">
+                  <video
+                    src={activeProject.coverVideo}
+                    className="project-detail-video"
+                    controls
+                    muted
+                    loop
+                    autoPlay
+                    playsInline
+                  />
+                </div>
+              ) : activeProject.beforeAfterImg || activeProject.coverImg ? (
+                <div className="project-detail-cover project-detail-img-wrap">
+                  <img
+                    src={activeProject.beforeAfterImg || activeProject.coverImg!}
+                    alt={activeProject.title}
+                    className="project-detail-img"
+                  />
+                </div>
+              ) : (
+                <div
+                  className="project-detail-cover"
+                  style={{ background: activeProject.coverGradient }}
+                >
+                  <span className="project-cover-icon">{activeProject.coverIcon}</span>
+                </div>
+              )}
+            </div>
+          );
+        })()}
+
+            {/* AI 项目特有：提示词展示 */}
+            {activeProject.aiPrompt && (
+              <div className="ai-prompt-box">
+                <div className="ai-prompt-label">✦ AI 提示词</div>
+                <code className="ai-prompt-text">{activeProject.aiPrompt}</code>
+              </div>
+            )}
+            {/* AI 项目特有：工作流步骤 */}
+            {activeProject.processSteps && activeProject.processSteps.length > 0 && (
+              <>
+                <h4>设计工作流</h4>
+                <ol className="process-steps">
+                  {activeProject.processSteps.map((step, i) => (
+                    <li key={i} className="process-step-item">
+                      <span className="process-step-num">{String(i + 1).padStart(2, '0')}</span>
+                      <span className="process-step-text">{step}</span>
+                    </li>
+                  ))}
+                </ol>
+              </>
+            )}
+            {/* AI 项目特有：过程截图 */}
+            {activeProject.processScreenshots && activeProject.processScreenshots.length > 0 && (
+              <>
+                <h4>创作过程</h4>
+                <div className="process-gallery">
+                  {activeProject.processScreenshots.map((img, i) => (
+                    <img key={i} src={img} alt={`过程 ${i + 1}`} className="process-gallery-img" />
+                  ))}
+                </div>
+              </>
+            )}
+            <div className="project-detail-meta">
+              <span className="project-tag">{activeProject.category}</span>
+              <span className="project-year">{activeProject.year}</span>
+            </div>
+            <p className="project-detail-desc">{activeProject.description}</p>
+
+            <h4>项目亮点</h4>
+            <ul>
+              {activeProject.highlights.map((h) => (
+                <li key={h}>{h}</li>
+              ))}
+            </ul>
+
+            <h4>使用工具 / 技术栈</h4>
+            <ul className="project-stack project-stack--inline">
+              {activeProject.stack.map((tech) => (
+                <li key={tech}>{tech}</li>
+              ))}
+            </ul>
+
+            {(activeProject.demoUrl || activeProject.sourceUrl) && (
+              <div className="project-detail-actions">
+                {activeProject.demoUrl && (
+                  <a
+                    className="project-detail-btn"
+                    href={activeProject.demoUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    在线演示
+                  </a>
+                )}
+                {activeProject.sourceUrl && (
+                  <a
+                    className="project-detail-btn project-detail-btn--ghost"
+                    href={activeProject.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    查看源码
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
+    </section>
+  );
+};
+
+export default FeaturedProjects;

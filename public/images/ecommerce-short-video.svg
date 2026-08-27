@@ -1,0 +1,20 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
+  <defs>
+    <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#06B6D4"/>
+      <stop offset="50%" style="stop-color:#3B82F6"/>
+      <stop offset="100%" style="stop-color:#8B5CF6"/>
+    </linearGradient>
+    <filter id="shadow1"><feDropShadow dx="0" dy="8" stdDeviation="16" flood-color="#000" flood-opacity="0.3"/></filter>
+  </defs>
+  <rect width="1600" height="900" fill="url(#g1)"/>
+  <circle cx="1360" cy="160" r="200" fill="rgba(255,255,255,0.08)"/>
+  <circle cx="240" cy="760" r="240" fill="rgba(255,255,255,0.06)"/>
+  <circle cx="1400" cy="700" r="120" fill="rgba(255,255,255,0.1)"/>
+  <rect x="640" y="300" width="320" height="220" rx="24" fill="rgba(255,255,255,0.15)" stroke="rgba(255,255,255,0.3)" stroke-width="4" filter="url(#shadow1)"/>
+  <polygon points="780,350 780,470 860,410" fill="rgba(255,255,255,0.95)"/>
+  <rect x="560" y="580" width="480" height="12" rx="6" fill="rgba(255,255,255,0.2)"/>
+  <rect x="560" y="580" width="240" height="12" rx="6" fill="rgba(255,255,255,0.6)"/>
+  <circle cx="800" cy="586" r="16" fill="#fff"/>
+  <text x="800" y="800" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-family="Inter,sans-serif" font-size="40" font-weight="500">电商产品短视频制作</text>
+</svg>

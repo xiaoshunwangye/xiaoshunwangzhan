@@ -21,3 +21,73 @@
     padding: 60px 0;
   }
 }
+
+.skills-hint {
+  margin: 8px 0 0;
+  color: #67e8f9;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+.skills-bento-section .magic-bento-card {
+  cursor: pointer;
+  transition: transform 0.25s ease;
+}
+
+.skills-bento-section .magic-bento-card:hover {
+  transform: translateY(-4px);
+}
+
+.skills-bento-section .magic-bento-card:focus-visible {
+  outline: 2px solid rgba(132, 0, 255, 0.6);
+  outline-offset: 4px;
+}
+
+/* 技能详情弹窗 */
+.skill-detail-label {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: rgba(132, 0, 255, 0.16);
+  color: #c4b5fd;
+  border: 1px solid rgba(132, 0, 255, 0.32);
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.skill-detail-desc {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #d8def0;
+  margin: 0 0 8px;
+}
+
+.skill-level {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.skill-level-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  transition: background 0.3s ease;
+}
+
+.skill-level-dot.is-filled {
+  background: linear-gradient(135deg, #8B5CF6, #06B6D4);
+  border-color: transparent;
+  box-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+}
+
+.skill-level-text {
+  margin-left: 8px;
+  color: #aab2c8;
+  font-size: 0.9rem;
+}

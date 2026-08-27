@@ -1,71 +1,31 @@
-﻿import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import BorderGlow from './BorderGlow';
+import Modal from './Modal';
+import { projects, PROJECT_CATEGORIES, CATEGORY_COLORS } from '../data/projects';
+import type { Project, ProjectCategory } from '../types/project';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const projects = [
-  {
-    title: '电商产品短视频制作',
-    tag: '短视频内容',
-    year: '2025.06 — 2025.07',
-    description:
-      '围绕电商产品拍摄与制作短视频内容，从脚本到成片全流程输出，兼顾详情页展示与投放素材需求。',
-    stack: ['剪映', 'After Effects', '产品拍摄', '动态字幕'],
-  },
-  {
-    title: '电商店铺视觉设计',
-    tag: '电商设计',
-    year: '2025.03 — 2025.05',
-    description:
-      '独立完成电商店铺的产品主图与详情页设计，遵循平台视觉规范，以清晰的视觉层级呈现产品卖点。',
-    stack: ['Photoshop', 'Illustrator', '详情页排版', '活动海报'],
-  },
-  {
-    title: '产品图片精修与调色',
-    tag: '产品修图',
-    year: '2025',
-    description:
-      '对产品图片进行精修与调色处理，突出产品质感与卖点，提升视觉吸引力与转化表现。',
-    stack: ['Photoshop', '色彩构成', '产品精修', '调色'],
-  },
-  {
-    title: '店铺活动海报设计',
-    tag: '运营设计',
-    year: '2025',
-    description:
-      '为节日、促销等不同场景设计店铺活动海报，建立电商视觉营销的基础思路与画面节奏感。',
-    stack: ['版式设计', '节日海报', '促销视觉', '素材管理'],
-  },
-  {
-    title: '动态主图与产品展示',
-    tag: '动效设计',
-    year: '2025',
-    description:
-      '制作动态主图与产品展示小视频，用动效强化产品信息层级，提升电商平台的点击率与停留时长。',
-    stack: ['After Effects', '动态海报', '产品展示', '动效'],
-  },
-  {
-    title: 'AI 辅助电商视觉探索',
-    tag: 'AI 探索',
-    year: '2025',
-    description:
-      '尝试用 AI 绘图工具辅助电商视觉创作，用于灵感发散、素材生成与画面氛围参考，提升设计效率。',
-    stack: ['AI 绘图', '素材生成', '灵感发散', '后期合成'],
-  },
-  {
-    title: '电商视觉课程作业集',
-    tag: '课程实践',
-    year: '2024 — 2025',
-    description:
-      '在校期间完成的多条电商店铺视觉设计课程作业，覆盖产品主图、详情页排版与节日海报设计。',
-    stack: ['Photoshop', 'Illustrator', '版式设计', '色彩构成'],
-  },
-];
+type FilterValue = ProjectCategory | 'all';
+
+const CATEGORY_GRADIENT_COLORS: Record<ProjectCategory, string[]> = {
+  '电商设计': ['#EC4899', '#F59E0B', '#EF4444'],
+  '短视频内容': ['#06B6D4', '#3B82F6', '#8B5CF6'],
+  'AI 探索': ['#8B5CF6', '#6366F1', '#EC4899'],
+  '课程实践': ['#10B981', '#06B6D4', '#3B82F6'],
+};
 
 const FeaturedProjects = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [filter, setFilter] = useState<FilterValue>('all');
+  const [activeProject, setActiveProject] = useState<Project | null>(null);
+
+  const filteredProjects = useMemo(() => {
+    if (filter === 'all') return projects;
+    return projects.filter((p) => p.category === filter);
+  }, [filter]);
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -74,9 +34,7 @@ const FeaturedProjects = () => {
     const ctx = gsap.context(() => {
       const label = section.querySelector('.section-label');
       const title = section.querySelector('h2');
-      const cards = section.querySelectorAll('.projects-grid > *');
 
-      // Label animation
       if (label) {
         gsap.fromTo(label,
           { x: -40, opacity: 0 },
@@ -94,7 +52,6 @@ const FeaturedProjects = () => {
         );
       }
 
-      // Title animation
       if (title) {
         gsap.fromTo(title,
           { y: 60, opacity: 0, scale: 0.85 },
@@ -112,55 +69,29 @@ const FeaturedProjects = () => {
           }
         );
       }
-
-      // Card stagger animation
-      cards.forEach((card, index) => {
-        gsap.fromTo(card,
-          { y: 50, opacity: 0, scale: 0.95 },
-          {
-            y: 0,
-            opacity: 1,
-            scale: 1,
-            duration: 0.7,
-            ease: 'power2.out',
-            delay: index * 0.15,
-            scrollTrigger: {
-              trigger: card,
-              start: 'top 85%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-      });
-
-      // Image reveal animation
-      const thumbs = section.querySelectorAll('.project-thumb');
-      thumbs.forEach((thumb) => {
-        const parent = thumb.parentElement;
-        if (!parent || parent.querySelector('.image-reveal-mask')) return;
-
-        const mask = document.createElement('div');
-        mask.className = 'image-reveal-mask';
-        parent.appendChild(mask);
-
-        gsap.fromTo(mask,
-          { clipPath: 'inset(0 0 100% 0)' },
-          {
-            clipPath: 'inset(0 0 0% 0)',
-            duration: 1,
-            ease: 'power4.inOut',
-            scrollTrigger: {
-              trigger: parent,
-              start: 'top 80%',
-              toggleActions: 'play none none reverse',
-            },
-          }
-        );
-      });
     }, section);
 
     return () => ctx.revert();
   }, []);
+
+  // 筛选切换时卡片：先淡出，再错开淡入
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    const cards = section.querySelectorAll('.projects-grid > article');
+    if (cards.length === 0) return;
+
+    const tl = gsap.timeline({
+      onComplete: () => {
+        gsap.fromTo(
+          cards,
+          { y: 20, opacity: 0, scale: 0.97 },
+          { y: 0, opacity: 1, scale: 1, duration: 0.4, stagger: 0.06, ease: 'power2.out' }
+        );
+      },
+    });
+    tl.to(cards, { opacity: 0, y: -10, duration: 0.2, stagger: 0.03 });
+  }, [filter]);
 
   return (
     <section id="projects" className="content-section" ref={sectionRef}>
@@ -168,30 +99,79 @@ const FeaturedProjects = () => {
         <span className="section-label">精选项目</span>
         <h2>代表作品</h2>
       </div>
+
+      <div className="project-filters" role="tablist" aria-label="作品分类筛选">
+        {PROJECT_CATEGORIES.map((cat) => (
+          <button
+            key={cat.value}
+            type="button"
+            role="tab"
+            aria-selected={filter === cat.value}
+            className={`project-filter-btn ${filter === cat.value ? 'is-active' : ''}`}
+            onClick={() => setFilter(cat.value)}
+          >
+            {cat.label}
+            {cat.value !== 'all' && (
+              <span className="project-filter-count">
+                {projects.filter((p) => p.category === cat.value).length}
+              </span>
+            )}
+          </button>
+        ))}
+      </div>
+
       <div className="projects-grid">
-        {projects.map((item) => (
-          <article className="project-card" key={item.title}>
+        {filteredProjects.map((item) => (
+          <article className="project-card" key={item.id}>
             <BorderGlow
               edgeSensitivity={30}
-              glowColor="190 80 60"
+              glowColor={CATEGORY_COLORS[item.category].glow}
               backgroundColor="transparent"
               borderRadius={32}
               glowRadius={40}
               glowIntensity={1.0}
               coneSpread={25}
               animated={false}
-              colors={['#06B6D4', '#3B82F6', '#8B5CF6']}
+              colors={CATEGORY_GRADIENT_COLORS[item.category]}
               fillOpacity={0}
             >
+              <button
+                type="button"
+                className={`project-cover-btn category-${item.category.replace(/\s/g, '-')}`}
+                onClick={() => setActiveProject(item)}
+                aria-label={`查看 ${item.title} 详情`}
+              >
+                {item.coverVideo ? (
+                  <video
+                    src={item.coverVideo}
+                    className="project-cover-video"
+                    muted
+                    loop
+                    autoPlay
+                    playsInline
+                    poster={item.coverImg || undefined}
+                  />
+                ) : item.coverImg ? (
+                  <img
+                    src={item.coverImg}
+                    alt={item.title}
+                    className="project-cover-img"
+                    loading="lazy"
+                  />
+                ) : (
+                  <span className="project-cover-icon">{item.coverIcon}</span>
+                )}
+                <span className="project-cover-label">{item.title}</span>
+              </button>
               <div className="project-copy">
                 <div className="project-meta">
-                  <span className="project-tag">{item.tag}</span>
+                  <span className="project-tag" data-category={item.category}>{item.category}</span>
                   <span className="project-year">{item.year}</span>
                 </div>
                 <h3>{item.title}</h3>
-                <p>{item.description}</p>
+                <p>{item.summary}</p>
                 <ul className="project-stack">
-                  {item.stack.map((tech) => (
+                  {item.stack.slice(0, 4).map((tech) => (
                     <li key={tech}>{tech}</li>
                   ))}
                 </ul>
@@ -200,6 +180,94 @@ const FeaturedProjects = () => {
           </article>
         ))}
       </div>
+
+      {filteredProjects.length === 0 && (
+        <p className="project-empty">该分类下暂无作品</p>
+      )}
+
+      <Modal
+        open={activeProject !== null}
+        onClose={() => setActiveProject(null)}
+        title={activeProject?.title}
+        maxWidth={760}
+      >
+        {activeProject && (
+          <div className="project-detail">
+            {activeProject.coverVideo ? (
+              <div className="project-detail-cover project-detail-video-wrap">
+                <video
+                  src={activeProject.coverVideo}
+                  className="project-detail-video"
+                  controls
+                  muted
+                  loop
+                  autoPlay
+                  playsInline
+                />
+              </div>
+            ) : activeProject.coverImg ? (
+              <div className="project-detail-cover project-detail-img-wrap">
+                <img
+                  src={activeProject.coverImg}
+                  alt={activeProject.title}
+                  className="project-detail-img"
+                />
+              </div>
+            ) : (
+              <div
+                className="project-detail-cover"
+                style={{ background: activeProject.coverGradient }}
+              >
+                <span className="project-cover-icon">{activeProject.coverIcon}</span>
+              </div>
+            )}
+            <div className="project-detail-meta">
+              <span className="project-tag">{activeProject.category}</span>
+              <span className="project-year">{activeProject.year}</span>
+            </div>
+            <p className="project-detail-desc">{activeProject.description}</p>
+
+            <h4>项目亮点</h4>
+            <ul>
+              {activeProject.highlights.map((h) => (
+                <li key={h}>{h}</li>
+              ))}
+            </ul>
+
+            <h4>使用工具 / 技术栈</h4>
+            <ul className="project-stack project-stack--inline">
+              {activeProject.stack.map((tech) => (
+                <li key={tech}>{tech}</li>
+              ))}
+            </ul>
+
+            {(activeProject.demoUrl || activeProject.sourceUrl) && (
+              <div className="project-detail-actions">
+                {activeProject.demoUrl && (
+                  <a
+                    className="project-detail-btn"
+                    href={activeProject.demoUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    在线演示
+                  </a>
+                )}
+                {activeProject.sourceUrl && (
+                  <a
+                    className="project-detail-btn project-detail-btn--ghost"
+                    href={activeProject.sourceUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    查看源码
+                  </a>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+      </Modal>
     </section>
   );
 };

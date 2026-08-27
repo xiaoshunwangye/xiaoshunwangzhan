@@ -1,0 +1,23 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="g4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F59E0B"/>
+      <stop offset="100%" style="stop-color:#EF4444"/>
+    </linearGradient>
+    <filter id="shadow4"><feDropShadow dx="0" dy="6" stdDeviation="12" flood-color="#000" flood-opacity="0.25"/></filter>
+  </defs>
+  <rect width="800" height="450" fill="url(#g4)"/>
+  <circle cx="80" cy="80" r="120" fill="rgba(255,255,255,0.07)"/>
+  <circle cx="750" cy="400" r="80" fill="rgba(255,255,255,0.1)"/>
+  <rect x="200" y="50" width="400" height="320" rx="16" fill="rgba(255,255,255,0.12)" stroke="rgba(255,255,255,0.25)" stroke-width="2" filter="url(#shadow4)"/>
+  <rect x="230" y="80" width="340" height="160" rx="8" fill="rgba(255,255,255,0.15)"/>
+  <rect x="250" y="260" width="120" height="40" rx="8" fill="rgba(255,255,255,0.25)"/>
+  <text x="310" y="287" text-anchor="middle" fill="#fff" font-family="Arial" font-size="16" font-weight="bold">SALE</text>
+  <rect x="400" y="260" width="150" height="40" rx="8" fill="rgba(255,255,255,0.25)"/>
+  <text x="475" y="287" text-anchor="middle" fill="#fff" font-family="Arial" font-size="18" font-weight="bold">50% OFF</text>
+  <rect x="280" y="320" width="240" height="48" rx="24" fill="rgba(255,255,255,0.3)"/>
+  <text x="400" y="350" text-anchor="middle" fill="#fff" font-family="Arial" font-size="16" font-weight="600">立即购买</text>
+  <polygon points="650,100 660,120 680,125 660,130 650,150 640,130 620,125 640,120" fill="rgba(255,255,255,0.3)"/>
+  <polygon points="150,200 158,215 175,220 158,225 150,240 142,225 125,220 142,215" fill="rgba(255,255,255,0.25)"/>
+  <text x="400" y="425" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-family="Inter,sans-serif" font-size="18" font-weight="500">店铺活动海报设计</text>
+</svg>

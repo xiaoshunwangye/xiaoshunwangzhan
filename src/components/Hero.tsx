@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import SpecularButton from './SpecularButton';
 import PillNav from './PillNav';
+import AudioPlayer from './AudioPlayer';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import heroVideoUrl from '/hero-video.mp4?url';
@@ -45,42 +46,23 @@ const Hero = () => {
     // Autoplay fallback: 浏览器自动播放策略阻止时，在首次用户交互后播放
     const video = hero.querySelector('video');
     if (video) {
-      const tryPlay = () => {
+      // 视频 preload="none"，首次用户交互时触发加载
+      const handleLoad = () => {
         const playPromise = video.play();
         if (playPromise !== undefined) {
-          playPromise.catch(() => {
-            // 自动播放被阻止，等待用户交互
-          });
+          playPromise.catch(() => {});
         }
+        video.removeEventListener('loadeddata', handleLoad);
       };
+      video.addEventListener('loadeddata', handleLoad);
 
-      // 尝试立即播放
-      tryPlay();
-
-      // 微信 X5 内核特殊处理：通过 WeixinJSBridge 触发播放
-      const handleWeixinReady = () => {
-        tryPlay();
-      };
-      if (typeof (window as any).WeixinJSBridge !== 'undefined') {
-        (window as any).WeixinJSBridge.invoke('getNetworkType', {}, handleWeixinReady);
-      } else {
-        document.addEventListener('WeixinJSBridgeReady', handleWeixinReady, false);
-      }
-
-      // 监听首次用户交互（点击/触摸/滚动/键盘）
+      // 监听首次用户交互触发视频加载
       const events: Array<keyof DocumentEventMap> = ['click', 'touchstart', 'scroll', 'keydown'];
       const onUserInteract = () => {
-        tryPlay();
+        video?.play().catch(() => {});
         events.forEach((evt) => document.removeEventListener(evt, onUserInteract));
       };
       events.forEach((evt) => document.addEventListener(evt, onUserInteract, { once: true, passive: true }));
-
-      // iPad 微信特殊处理：监听 visibilitychange，页面可见时尝试播放
-      document.addEventListener('visibilitychange', () => {
-        if (!document.hidden) {
-          tryPlay();
-        }
-      });
     }
 
     return () => {
@@ -97,7 +79,7 @@ const Hero = () => {
         loop
         muted
         playsInline
-        preload="metadata"
+        preload="none"
         poster={heroPosterUrl}
         disablePictureInPicture
         disableRemotePlayback
@@ -158,6 +140,7 @@ const Hero = () => {
           <span></span>
         </div>
       </div>
+      <AudioPlayer />
     </section>
   );
 };

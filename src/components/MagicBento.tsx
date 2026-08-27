@@ -116,6 +116,7 @@ const ParticleCard = ({
   const memoizedParticles = useRef<HTMLElement[]>([]);
   const particlesInitialized = useRef(false);
   const magnetismAnimationRef = useRef<gsap.core.Tween | null>(null);
+  const lastMoveRef = useRef(0);
 
   const initializeParticles = useCallback(() => {
     if (particlesInitialized.current || !cardRef.current) return;
@@ -235,6 +236,11 @@ const ParticleCard = ({
 
     const handleMouseMove = (e: MouseEvent) => {
       if (!enableTilt && !enableMagnetism) return;
+
+      // 节流：每 16ms 最多更新一次，减少 gsap.to 调用频率
+      const now = performance.now();
+      if (now - lastMoveRef.current < 16) return;
+      lastMoveRef.current = now;
 
       const rect = element.getBoundingClientRect();
       const x = e.clientX - rect.left;

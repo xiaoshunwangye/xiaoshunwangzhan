@@ -1,0 +1,28 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450">
+  <defs>
+    <linearGradient id="g7" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#64748B"/>
+      <stop offset="100%" style="stop-color:#94A3B8"/>
+    </linearGradient>
+    <filter id="shadow7"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000" flood-opacity="0.2"/></filter>
+  </defs>
+  <rect width="800" height="450" fill="url(#g7)"/>
+  <circle cx="80" cy="80" r="100" fill="rgba(255,255,255,0.05)"/>
+  <circle cx="720" cy="380" r="80" fill="rgba(255,255,255,0.06)"/>
+  <rect x="100" y="60" width="220" height="300" rx="12" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" filter="url(#shadow7)"/>
+  <rect x="120" y="90" width="180" height="120" rx="6" fill="rgba(255,255,255,0.12)"/>
+  <rect x="120" y="230" width="140" height="10" rx="5" fill="rgba(255,255,255,0.25)"/>
+  <rect x="120" y="250" width="100" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
+  <rect x="120" y="280" width="180" height="60" rx="6" fill="rgba(255,255,255,0.08)"/>
+  <rect x="340" y="60" width="220" height="300" rx="12" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" filter="url(#shadow7)"/>
+  <rect x="360" y="90" width="180" height="120" rx="6" fill="rgba(255,255,255,0.12)"/>
+  <rect x="360" y="230" width="140" height="10" rx="5" fill="rgba(255,255,255,0.25)"/>
+  <rect x="360" y="250" width="100" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
+  <rect x="360" y="280" width="180" height="60" rx="6" fill="rgba(255,255,255,0.08)"/>
+  <rect x="580" y="60" width="220" height="300" rx="12" fill="rgba(255,255,255,0.1)" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" filter="url(#shadow7)"/>
+  <rect x="600" y="90" width="180" height="120" rx="6" fill="rgba(255,255,255,0.12)"/>
+  <rect x="600" y="230" width="140" height="10" rx="5" fill="rgba(255,255,255,0.25)"/>
+  <rect x="600" y="250" width="100" height="8" rx="4" fill="rgba(255,255,255,0.2)"/>
+  <rect x="600" y="280" width="180" height="60" rx="6" fill="rgba(255,255,255,0.08)"/>
+  <text x="400" y="410" text-anchor="middle" fill="rgba(255,255,255,0.85)" font-family="Inter,sans-serif" font-size="18" font-weight="500">电商视觉课程作业集</text>
+</svg>

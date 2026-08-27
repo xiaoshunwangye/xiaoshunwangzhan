@@ -80,7 +80,11 @@ const PillNav = ({
 
     layout();
 
-    const onResize = () => layout();
+    const onResize = () => {
+      clearTimeout(onResize.timer);
+      onResize.timer = setTimeout(layout, 150);
+    };
+    onResize.timer = null;
     window.addEventListener('resize', onResize);
 
     if (document.fonts?.ready) {

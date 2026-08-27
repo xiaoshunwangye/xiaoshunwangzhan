@@ -91,9 +91,16 @@ const BorderGlow = ({
     return degrees;
   }, [getCenterOfElement]);
 
+  const lastMoveRef = useRef(0);
+
   const handlePointerMove = useCallback((e) => {
     const card = cardRef.current;
     if (!card) return;
+
+    // 节流：最多每 16ms 更新一次（~60fps），避免大量 DOM 操作
+    const now = performance.now();
+    if (now - lastMoveRef.current < 16) return;
+    lastMoveRef.current = now;
 
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;

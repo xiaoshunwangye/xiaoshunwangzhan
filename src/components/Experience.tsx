@@ -1,12 +1,22 @@
-﻿import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import BorderGlow from './BorderGlow';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const timeline = [
+interface TimelineItem {
+  id: string;
+  period: string;
+  role: string;
+  company: string;
+  summary: string;
+  highlights: string[];
+}
+
+const timeline: TimelineItem[] = [
   {
+    id: 'short-video',
     period: '2025.06 — 2025.07',
     role: '电商产品短视频制作',
     company: '个人 / 团队实践',
@@ -19,6 +29,7 @@ const timeline = [
     ],
   },
   {
+    id: 'visual-design',
     period: '2025.03 — 2025.05',
     role: '电商店铺视觉设计',
     company: '课程项目',
@@ -31,6 +42,7 @@ const timeline = [
     ],
   },
   {
+    id: 'study',
     period: '2024 — 2027',
     role: '平面设计专业学习',
     company: '湛江理工职业学校',
@@ -46,12 +58,12 @@ const timeline = [
 
 const Experience = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    // 使用 gsap.context 局部管理，仅清理本组件创建的 ScrollTrigger
     const ctx = gsap.context(() => {
       const label = section.querySelector('.section-label');
       const title = section.querySelector('h2');
@@ -59,7 +71,6 @@ const Experience = () => {
       const stats = section.querySelectorAll('.stat-card span');
       const items = section.querySelectorAll('.timeline-item');
 
-      // Label animation
       if (label) {
         gsap.fromTo(label,
           { x: -40, opacity: 0 },
@@ -77,7 +88,6 @@ const Experience = () => {
         );
       }
 
-      // Title animation
       if (title) {
         gsap.fromTo(title,
           { y: 60, opacity: 0, scale: 0.85 },
@@ -96,7 +106,6 @@ const Experience = () => {
         );
       }
 
-      // Card stagger animation
       cards.forEach((card, index) => {
         gsap.fromTo(card,
           { y: 50, opacity: 0, scale: 0.95 },
@@ -116,7 +125,6 @@ const Experience = () => {
         );
       });
 
-      // Counter animation
       stats.forEach((stat) => {
         const text = stat.textContent || '0';
         const target = parseInt(text.replace(/\D/g, '') || '0');
@@ -140,7 +148,6 @@ const Experience = () => {
         });
       });
 
-      // Timeline items animation
       items.forEach((item, index) => {
         gsap.fromTo(
           item,
@@ -163,6 +170,10 @@ const Experience = () => {
 
     return () => ctx.revert();
   }, []);
+
+  const toggleExpand = (id: string) => {
+    setExpandedId((prev) => (prev === id ? null : id));
+  };
 
   return (
     <section id="experience" className="content-section" ref={sectionRef}>
@@ -257,38 +268,64 @@ const Experience = () => {
       </div>
 
       <div className="timeline">
-        {timeline.map((item) => (
-          <BorderGlow
-            key={item.period}
-            edgeSensitivity={30}
-            glowColor="190 80 60"
-            backgroundColor="transparent"
-            borderRadius={28}
-            glowRadius={40}
-            glowIntensity={1.0}
-            coneSpread={25}
-            animated={false}
-            colors={['#06B6D4', '#3B82F6', '#8B5CF6']}
-            fillOpacity={0}
-          >
-            <div className="timeline-item">
-              <div className="timeline-marker" />
-              <div className="timeline-content">
-                <span className="timeline-period">{item.period}</span>
-                <h3 className="timeline-role">
-                  {item.role}
-                  <span className="timeline-company"> · {item.company}</span>
-                </h3>
-                <p className="timeline-summary">{item.summary}</p>
-                <ul className="timeline-highlights">
-                  {item.highlights.map((point) => (
-                    <li key={point}>{point}</li>
-                  ))}
-                </ul>
+        {timeline.map((item) => {
+          const isExpanded = expandedId === item.id;
+          return (
+            <BorderGlow
+              key={item.id}
+              edgeSensitivity={30}
+              glowColor="190 80 60"
+              backgroundColor="transparent"
+              borderRadius={28}
+              glowRadius={40}
+              glowIntensity={1.0}
+              coneSpread={25}
+              animated={false}
+              colors={['#06B6D4', '#3B82F6', '#8B5CF6']}
+              fillOpacity={0}
+            >
+              <div
+                className={`timeline-item ${isExpanded ? 'is-expanded' : ''}`}
+                onClick={() => toggleExpand(item.id)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    toggleExpand(item.id);
+                  }
+                }}
+                role="button"
+                tabIndex={0}
+                aria-expanded={isExpanded}
+              >
+                <div className="timeline-marker" />
+                <div className="timeline-content">
+                  <span className="timeline-period">{item.period}</span>
+                  <h3 className="timeline-role">
+                    {item.role}
+                    <span className="timeline-company"> · {item.company}</span>
+                  </h3>
+                  <p className="timeline-summary">{item.summary}</p>
+                  <div
+                    className="timeline-collapsible"
+                    style={{
+                      maxHeight: isExpanded ? '500px' : '0',
+                      opacity: isExpanded ? 1 : 0,
+                    }}
+                  >
+                    <ul className="timeline-highlights">
+                      {item.highlights.map((point) => (
+                        <li key={point}>{point}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <span className="timeline-toggle">
+                    {isExpanded ? '收起 ↑' : '展开详情 ↓'}
+                  </span>
+                </div>
               </div>
-            </div>
-          </BorderGlow>
-        ))}
+            </BorderGlow>
+          );
+        })}
       </div>
     </section>
   );

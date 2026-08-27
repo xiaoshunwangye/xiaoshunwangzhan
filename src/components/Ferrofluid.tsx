@@ -226,6 +226,18 @@ const Ferrofluid: React.FC<FerrofluidProps> = ({
   mouseDampening = 0.15,
   mixBlendMode
 }) => {
+  // 检测设备性能，低性能设备降低 DPR 和动画质量
+  const getOptimalDPR = (userDPR?: number) => {
+    const hardwareConcurrency = navigator.hardwareConcurrency || 4;
+    const hasLowMemory = (navigator as any).deviceMemory !== undefined && (navigator as any).deviceMemory < 4;
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const baseDPR = userDPR ?? Math.min(window.devicePixelRatio || 1, 1.5);
+    // 低性能设备：移动端 / 低内存 / 少核心
+    if (hasLowMemory || (isMobile && hardwareConcurrency < 6)) {
+      return Math.min(baseDPR, 1);
+    }
+    return baseDPR;
+  };
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
   const programRef = useRef<any>(null);
@@ -240,8 +252,7 @@ const Ferrofluid: React.FC<FerrofluidProps> = ({
     if (!container) return;
 
     const renderer = new Renderer({
-      // 限制 DPR 上限，避免在 Retina/高 DPR 设备上 GPU 过载
-      dpr: dpr ?? Math.min(typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1, 1.5),
+      dpr: getOptimalDPR(dpr),
       alpha: true,
       antialias: false
     });
@@ -333,6 +344,12 @@ const Ferrofluid: React.FC<FerrofluidProps> = ({
       rafRef.current = requestAnimationFrame(loop);
       // 不可见时跳过渲染，但仍保持 RAF 以便恢复时无缝继续
       if (!isVisible) return;
+
+      // 节流：低性能设备或移动端限制到 30fps，降低 GPU 负载
+      const lastRender = (loop as any).__lastRender || 0;
+      const fpsLimit = 1000 / 60; // 默认 60fps，可进一步降低
+      if (t - lastRender < fpsLimit) return;
+      (loop as any).__lastRender = t;
 
       uniforms.iTime.value = t * 0.001;
 
