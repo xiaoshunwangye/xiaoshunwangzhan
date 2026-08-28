@@ -2,6 +2,23 @@ import { useRef, useEffect, useState } from 'react';
 import { Renderer, Program, Triangle, Mesh } from 'ogl';
 import './SideRays.css';
 
+type UniformsType = {
+  iTime: { value: number };
+  iResolution: { value: number[] };
+  iSpeed: { value: number };
+  iRayColor1: { value: [number, number, number] };
+  iRayColor2: { value: [number, number, number] };
+  iIntensity: { value: number };
+  iSpread: { value: number };
+  iFlipX: { value: number };
+  iFlipY: { value: number };
+  iTilt: { value: number };
+  iSaturation: { value: number };
+  iBlend: { value: number };
+  iFalloff: { value: number };
+  iOpacity: { value: number };
+};
+
 const hexToRgb = (hex: string): [number, number, number] => {
   const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return m ? [parseInt(m[1], 16) / 255, parseInt(m[2], 16) / 255, parseInt(m[3], 16) / 255] : [1, 1, 1];
@@ -16,6 +33,21 @@ const originToFlip = (origin: string): [number, number] => {
   }
 };
 
+interface SideRaysProps {
+  speed?: number;
+  rayColor1?: string;
+  rayColor2?: string;
+  intensity?: number;
+  spread?: number;
+  origin?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  tilt?: number;
+  saturation?: number;
+  blend?: number;
+  falloff?: number;
+  opacity?: number;
+  className?: string;
+}
+
 const SideRays = ({
   speed = 2.5,
   rayColor1 = '#EAB308',
@@ -29,24 +61,9 @@ const SideRays = ({
   falloff = 1.6,
   opacity = 1.0,
   className = ''
-}) => {
+}: SideRaysProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const uniformsRef = useRef<{
-    iTime: { value: number };
-    iResolution: { value: number[] };
-    iSpeed: { value: number };
-    iRayColor1: { value: [number, number, number] };
-    iRayColor2: { value: [number, number, number] };
-    iIntensity: { value: number };
-    iSpread: { value: number };
-    iFlipX: { value: number };
-    iFlipY: { value: number };
-    iTilt: { value: number };
-    iSaturation: { value: number };
-    iBlend: { value: number };
-    iFalloff: { value: number };
-    iOpacity: { value: number };
-  } | null>(null);
+  const uniformsRef = useRef<UniformsType | null>(null);
   const rendererRef = useRef<Renderer | null>(null);
   const animationIdRef = useRef<number | null>(null);
   const meshRef = useRef<Mesh | null>(null);
@@ -173,7 +190,7 @@ void main() {
 }`;
 
       const [flipX, flipY] = originToFlip(origin);
-      const uniforms = {
+      const uniforms: UniformsType = {
         iTime: { value: 0 },
         iResolution: { value: [1, 1] },
         iSpeed: { value: speed },
