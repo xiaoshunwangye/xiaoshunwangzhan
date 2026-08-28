@@ -66,7 +66,12 @@ const AudioPlayer = () => {
     setCurrentIndex(index);
     audio.src = playlist[index].src;
     audio.load();
-    audio.play().then(() => setIsPlaying(true)).catch(() => {});
+    // 等待音频数据就绪后再播放
+    const onCanPlay = () => {
+      audio.removeEventListener('canplay', onCanPlay);
+      audio.play().then(() => setIsPlaying(true)).catch(() => {});
+    };
+    audio.addEventListener('canplay', onCanPlay);
     setShowPlaylist(false);
   };
 
@@ -124,21 +129,25 @@ const AudioPlayer = () => {
   const togglePlay = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    // 如果还没有 src 但 playlist 已加载，先设置 src
-    if (!audio.src && playlist.length > 0) {
-      audio.src = playlist[currentIndex].src;
-      audio.load();
-    }
     if (isPlaying) {
       audio.pause();
       setIsPlaying(false);
     } else {
+      // 如果还没有 src，先加载
+      if (!audio.src && playlist.length > 0) {
+        audio.src = playlist[currentIndex].src;
+        audio.load();
+        // 等待音频数据就绪后再播放
+        const onCanPlay = () => {
+          audio.removeEventListener('canplay', onCanPlay);
+          audio.play().then(() => setIsPlaying(true)).catch(() => {});
+        };
+        audio.addEventListener('canplay', onCanPlay);
+        return;
+      }
       const p = audio.play();
       if (p !== undefined) {
-        p.then(() => setIsPlaying(true)).catch((err) => {
-          console.error('[AudioPlayer] play failed:', err);
-          setIsPlaying(false);
-        });
+        p.then(() => setIsPlaying(true)).catch(() => {});
       } else {
         setIsPlaying(true);
       }
