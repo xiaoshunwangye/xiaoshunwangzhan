@@ -167,7 +167,7 @@ const Contact = () => {
       >
         <div className="contact-wrap">
           <span className="section-label">联系我</span>
-          <h2>期待加入佛山的设计团队，一起做好项目</h2>
+          <h2>想聊聊合作或者工作机会？直接联系我</h2>
 
           <div className="contact-info">
             <p>📞 19860398304</p>
@@ -185,7 +185,7 @@ const Contact = () => {
                   type="text"
                   value={form.name}
                   onChange={handleChange('name')}
-                  placeholder="请输入您的称呼"
+                  placeholder="怎么称呼你？"
                   maxLength={20}
                   aria-invalid={!!errors.name}
                 />
@@ -193,7 +193,7 @@ const Contact = () => {
               </div>
 
               <div className="contact-form-field">
-                <label htmlFor="contact-info">邮箱 / 手机号</label>
+                <label htmlFor="contact-info">邮箱或手机号</label>
                 <input
                   id="contact-info"
                   type="text"
@@ -213,7 +213,7 @@ const Contact = () => {
                 rows={4}
                 value={form.message}
                 onChange={handleChange('message')}
-                placeholder="请简单介绍您的需求或想聊的话题"
+                  placeholder="随便聊，说下你想聊啥"
                 maxLength={500}
                 aria-invalid={!!errors.message}
               />

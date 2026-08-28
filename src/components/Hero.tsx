@@ -114,11 +114,12 @@ const Hero = () => {
           />
         </header>
         <div className="hero-content">
-          <p className="eyebrow">平面设计 · 电商视觉 · 短视频内容 · AI 辅助</p>
-          <h1>用电商视觉与短视频内容讲好产品故事</h1>
+          <p className="eyebrow">杨大顺 · 电商视觉 & 短视频 · 湛江</p>
+          <h1>会做图，也会剪视频的那种设计</h1>
           <p className="hero-copy">
-            平面设计专业在读，专注电商主图、详情页与短视频内容设计，
-            把产品卖点转化为清晰、有吸引力的视觉表达。
+            学平面设计的，现在主要做电商主图和详情页，
+            顺便也会剪点短视频。工具熟练，效率在线，
+            有项目可以随时聊聊。
           </p>
           <SpecularButton
             size="lg"

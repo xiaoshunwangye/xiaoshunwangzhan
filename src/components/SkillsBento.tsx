@@ -21,73 +21,67 @@ const SKILL_DETAILS: SkillDetail[] = [
   {
     label: '视觉设计',
     title: 'Photoshop / Illustrator / Figma',
-    description:
-      '熟练使用主流视觉设计工具完成电商主图、详情页、海报等设计任务，注重画面层级与转化导向。',
+    description: '每天用 PS 和 AI 做电商图，Figma 用来对齐设计稿和切图，基本能独立搞定主图、详情页这些需求。',
     level: 5,
     scenarios: [
-      '电商产品主图与详情页设计',
-      '节日 / 促销海报设计',
-      '品牌视觉规范梳理',
+      '电商主图、详情页',
+      '节日促销海报',
+      '设计稿切图规范',
     ],
   },
   {
     label: '视频制作',
-    title: '剪映 / After Effects / Premiere',
-    description:
-      '能独立完成电商短视频从脚本到成片的全流程制作，擅长动态字幕与产品展示动效。',
+    title: '剪映 / After Effects',
+    description: '剪映日常剪短视频加字幕，AE 做一些动效和产品展示视频，节奏感这块练得比较多。',
     level: 4,
     scenarios: [
-      '电商产品短视频剪辑',
-      '动态主图与产品展示小视频',
-      '投放素材快速产出',
+      '电商短视频剪辑',
+      '动态主图',
+      '投放素材快速出',
     ],
   },
   {
     label: 'AI 工具',
     title: 'Midjourney / Stable Diffusion',
-    description:
-      '使用 AI 绘图工具辅助灵感发散与素材生成，建立 AI 辅助设计的工作流，提升创作效率。',
+    description: '用 AI 生成参考图找灵感、定画面氛围，不会直接拿 AI 图当成品，更多是辅助创作流程。',
     level: 4,
     scenarios: [
-      'AI 辅助灵感发散',
-      '素材生成与画面氛围参考',
-      '提示词工程实践',
+      'AI 辅助找灵感',
+      '画面氛围参考',
+      '写提示词出图',
     ],
   },
   {
     label: '电商设计',
-    title: '主图 / 详情页 / 活动海报',
-    description:
-      '熟悉电商平台视觉规范，理解转化导向设计，能针对不同场景输出合适的视觉方案。',
+    title: '主图 · 详情页 · 活动海报',
+    description: '熟悉淘宝、拼多多这些平台的视觉规范，知道怎么让页面既好看又能转化，针对不同品类有自己的套路。',
     level: 5,
     scenarios: [
-      '平台视觉规范遵循',
-      '转化导向设计思路',
-      '多场景视觉方案输出',
+      '平台视觉规范',
+      '转化导向设计',
+      '多品类视觉方案',
     ],
   },
   {
     label: '产品修图',
-    title: '精修 / 调色 / 色彩构成',
-    description:
-      '掌握多种产品修图技法，能针对不同品类产品给出合适的精修与调色方案，突出产品质感。',
+    title: '精修 · 调色 · 色彩构成',
+    description: '不同品类修图方法不一样，食品要鲜艳有食欲，数码要干净有质感，这块练了挺多。',
     level: 4,
     scenarios: [
       '产品质感精修',
-      '色彩调性与卖点强化',
-      '视觉吸引力提升',
+      '色彩调性调整',
+      '卖点视觉突出',
     ],
   },
   {
     label: '版式设计',
-    title: '排版 / 构图 / 视觉层级',
-    description:
-      '注重信息清晰度与画面节奏感，通过合理的排版与构图让设计更易读、更有吸引力。',
+    title: '排版 · 构图 · 视觉层级',
+    description: '排版讲究信息清晰和画面节奏，让设计更易读也有吸引力，节日海报和详情页都讲究这个。',
     level: 4,
     scenarios: [
       '信息层级组织',
-      '画面节奏感把控',
-      '阅读体验优化',
+      '画面节奏感',
+      '阅读体验改善',
     ],
   },
 ];
@@ -194,9 +188,9 @@ const SkillsBento = () => {
   return (
     <section id="skills" ref={sectionRef} className="skills-bento-section">
       <div className="section-head">
-        <span className="section-label">专业技能</span>
-        <h2>我掌握的工具与能力</h2>
-        <p className="skills-hint">点击任意技能卡片查看详情 →</p>
+        <span className="section-label">工具技能</span>
+        <h2>我会用的软件</h2>
+        <p className="skills-hint">点卡片看详细说明 →</p>
       </div>
       <MagicBento
         textAutoHide={true}

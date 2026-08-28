@@ -96,8 +96,8 @@ const FeaturedProjects = () => {
   return (
     <section id="projects" className="content-section" ref={sectionRef}>
       <div className="section-head">
-        <span className="section-label">精选项目</span>
-        <h2>代表作品</h2>
+        <span className="section-label">作品集</span>
+        <h2>做过的东西</h2>
       </div>
 
       <div className="project-filters" role="tablist" aria-label="作品分类筛选">
@@ -162,6 +162,9 @@ const FeaturedProjects = () => {
                   <span className="project-cover-icon">{item.coverIcon}</span>
                 )}
                 <span className="project-cover-label">{item.title}</span>
+                <span className="project-cover-cta" aria-hidden="true">
+                  <em>查看详情 →</em>
+                </span>
               </button>
               <div className="project-copy">
                 <div className="project-meta">
@@ -227,14 +230,43 @@ const FeaturedProjects = () => {
             </div>
             <p className="project-detail-desc">{activeProject.description}</p>
 
-            <h4>项目亮点</h4>
+            {activeProject.galleryImgs && activeProject.galleryImgs.length > 0 && (
+              <>
+                <h4>作品图集</h4>
+                <div className="project-gallery">
+                  {activeProject.galleryImgs.map((src, i) => {
+                    const isWide = activeProject.galleryWide?.[i] === true;
+                    const caption = activeProject.galleryCaptions?.[i];
+                    return (
+                      <figure
+                        key={src + i}
+                        className={`project-gallery-item${isWide ? ' is-wide' : ''}`}
+                      >
+                        <img
+                          src={src}
+                          alt={`${activeProject.title} 作品图 ${i + 1}`}
+                          className="project-gallery-img"
+                          loading="lazy"
+                          onClick={() => window.open(src, '_blank')}
+                          role="button"
+                          tabIndex={0}
+                        />
+                        {caption && <figcaption className="project-gallery-caption">{caption}</figcaption>}
+                      </figure>
+                    );
+                  })}
+                </div>
+              </>
+            )}
+
+            <h4>做了什么</h4>
             <ul>
               {activeProject.highlights.map((h) => (
                 <li key={h}>{h}</li>
               ))}
             </ul>
 
-            <h4>使用工具 / 技术栈</h4>
+            <h4>用的工具</h4>
             <ul className="project-stack project-stack--inline">
               {activeProject.stack.map((tech) => (
                 <li key={tech}>{tech}</li>

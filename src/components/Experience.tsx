@@ -21,11 +21,11 @@ const timeline: TimelineItem[] = [
     role: '电商产品短视频制作',
     company: '个人 / 团队实践',
     summary:
-      '围绕电商产品拍摄与制作短视频内容，从脚本到成片全流程输出，兼顾详情页展示与投放素材需求。',
+      '暑假期间和朋友一起做了几条电商产品短视频，从拍素材到剪辑全靠自己。',
     highlights: [
-      '使用剪映 / After Effects 完成多条电商产品短视频剪辑，添加卖点字幕与动态特效',
-      '结合产品实拍素材优化视频节奏与画面表现，贴合电商平台短视频传播调性',
-      '制作动态主图与产品展示小视频，提升产品在平台的点击率与停留时长',
+      '用剪映和 AE 剪了五六条产品短视频，加了字幕和转场特效',
+      '根据产品特点调整视频节奏，让画面更符合平台用户的观看习惯',
+      '还做了几个动态主图，用在商品页和广告投放上',
     ],
   },
   {
@@ -34,11 +34,11 @@ const timeline: TimelineItem[] = [
     role: '电商店铺视觉设计',
     company: '课程项目',
     summary:
-      '独立完成电商店铺的产品主图与详情页设计，遵循平台视觉规范，以清晰的视觉层级呈现产品卖点。',
+      '在学校课程中独立完成了一套电商店铺的视觉设计作业，包括主图、详情页和活动海报。',
     highlights: [
-      '独立完成产品主图与详情页设计，遵循平台视觉规范，优化产品展示逻辑',
-      '对产品图片进行精修与调色处理，突出产品卖点，提升视觉吸引力',
-      '制作节日、促销等店铺活动海报，建立电商视觉营销的基础思路',
+      '自己从零搭了一套店铺视觉，从主图到详情页排版全部独立完成',
+      '对商品图做了精修和调色，让产品展示更有质感',
+      '做了春节和双十一两个主题的活动海报',
     ],
   },
   {
@@ -47,11 +47,11 @@ const timeline: TimelineItem[] = [
     role: '平面设计专业学习',
     company: '湛江理工职业学校',
     summary:
-      '中专 / 中技平面设计专业在读，系统学习电商平面设计、色彩构成、产品修图、短视频剪辑与版式设计。',
+      '在湛江理工职业学校读平面设计，目前大三，正在为毕业后找工作做准备。',
     highlights: [
-      '主修课程：电商平面设计、色彩构成、产品修图、短视频剪辑、版式设计',
-      '在校完成多条电商店铺视觉设计课程作业，覆盖主图、详情页排版与节日海报',
-      '掌握电商设计基础逻辑与规范，熟练使用 Photoshop / Illustrator / After Effects',
+      '主要学了 Photoshop、Illustrator、AE 和剪映，已经能独立完成大部分电商设计需求',
+      '学校课程作业基本都在做电商相关的，主图、详情页、海报都练过',
+      '平时也在自己研究短视频剪辑和 AI 出图，持续学新东西',
     ],
   },
 ];
@@ -178,8 +178,8 @@ const Experience = () => {
   return (
     <section id="experience" className="content-section" ref={sectionRef}>
       <div className="section-head">
-        <span className="section-label">个人经历</span>
-        <h2>关于我</h2>
+        <span className="section-label">我的经历</span>
+        <h2>我是谁</h2>
       </div>
       <div className="experience-grid">
         <BorderGlow
@@ -197,17 +197,18 @@ const Experience = () => {
           <div className="profile-card">
             <div className="avatar" />
             <div className="profile-copy">
-              <h3>杨大顺 / 平面设计</h3>
+              <h3>杨大顺</h3>
               <p>
-                平面设计专业在读，专注电商视觉与短视频内容设计。
-                熟悉电商平台视觉规范，擅长把产品卖点转化为清晰、有吸引力的视觉表达，
-                也会用 AI 工具辅助灵感发散与素材生成。
+                湛江理工职业学校，平面设计专业。
+                能独立做电商主图、详情页，也会剪短视频，
+                平时会用 Midjourney 辅助出图找灵感。
+                找工作态度认真，做事效率高，希望能找个踏实做事的团队。
               </p>
               <div className="contact-meta">
-                <p>电话：19860398304</p>
-                <p>邮箱：15113609996@163.com</p>
-                <p>微信：Y-18-86-ds</p>
-                <p>求职意向：设计 · 期望城市：佛山 · 期望薪资：5-8K</p>
+                <p>📞 198-6039-8304</p>
+                <p>✉️ 15113609996@163.com</p>
+                <p>💬 微信：Y-18-86-ds</p>
+                <p>📍 广东佛山 · 期望薪资 5-8K</p>
               </div>
             </div>
           </div>
@@ -227,7 +228,7 @@ const Experience = () => {
           >
             <div className="stat-card">
               <span>2+</span>
-              <p>电商设计项目</p>
+              <p>做过的项目</p>
             </div>
           </BorderGlow>
           <BorderGlow
@@ -261,7 +262,7 @@ const Experience = () => {
           >
             <div className="stat-card">
               <span>6+</span>
-              <p>掌握设计工具</p>
+              <p>会用工具</p>
             </div>
           </BorderGlow>
         </div>

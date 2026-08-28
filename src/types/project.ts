@@ -32,6 +32,10 @@ export interface Project {
   processSteps?: string[];
   /** 作品集图片列表（可放多张） */
   galleryImgs?: string[];
+  /** 每张图集图的标注（顺序对应 galleryImgs） */
+  galleryCaptions?: string[];
+  /** 每张图集图是否走横排版式（顺序对应 galleryImgs） */
+  galleryWide?: boolean[];
   /** 作品集视频列表 */
   videos?: string[];
 }

@@ -8,39 +8,33 @@ gsap.registerPlugin(ScrollTrigger);
 const strengths = [
   {
     title: '电商视觉设计',
-    description:
-      '熟悉电商平台视觉规范，能独立完成产品主图、详情页与活动海报设计，遵循平台调性与转化逻辑。',
+    description: '能独立做电商主图、详情页和活动海报，熟悉淘宝/拼多多等平台的规范，知道怎么让页面看起来专业又卖货。',
     points: ['主图设计', '详情页排版', '活动海报'],
   },
   {
     title: '产品修图与调色',
-    description:
-      '对产品图片进行精修与调色处理，突出产品质感与卖点，提升视觉吸引力与转化表现。',
+    description: '能把商品原图修干净、调对色，不同品类有不同时令处理手法，食品偏鲜艳，数码偏干净。',
     points: ['产品精修', '色彩构成', '调色'],
   },
   {
-    title: '短视频内容制作',
-    description:
-      '使用剪映 / After Effects 完成电商产品短视频剪辑，添加卖点字幕与动态特效，适配平台传播。',
+    title: '短视频剪辑',
+    description: '会用剪映和 AE 剪电商短视频，加字幕、做动效，节奏感把握得比较熟练。',
     points: ['剪映', 'After Effects', '动态字幕'],
   },
   {
     title: 'AI 辅助设计',
-    description:
-      '了解 AI 绘图与生成式工具的基础用法，能用 AI 辅助灵感发散、素材生成与设计提效。',
-    points: ['AI 绘图', '灵感发散', '素材生成'],
+    description: '平时用 Midjourney 和 SD 生成参考图找灵感，不会直接拿 AI 图当成品用，更多是辅助创作。',
+    points: ['Midjourney', 'Stable Diffusion', '提示词'],
   },
   {
-    title: '版式与海报设计',
-    description:
-      '掌握版式设计基础，能针对节日、促销等不同场景输出清晰、有节奏感的视觉方案。',
+    title: '版式与海报',
+    description: '做过春节、双十一各种主题海报，对不同节日的视觉氛围有感觉，能快速出图。',
     points: ['版式设计', '节日海报', '促销视觉'],
   },
   {
-    title: '工具与软件',
-    description:
-      '熟练使用 Photoshop / Illustrator 完成日常设计工作，能用 After Effects 处理动效与视频。',
-    points: ['Photoshop', 'Illustrator', 'After Effects'],
+    title: '常用软件',
+    description: 'Photoshop 和 Illustrator 每天用，AE 做动效和短视频，Figma 偶尔用来对齐设计规范。',
+    points: ['PS', 'AI', 'AE', '剪映'],
   },
 ];
 
@@ -120,8 +114,8 @@ const Strengths = () => {
   return (
     <section id="strengths" className="content-section" ref={sectionRef}>
       <div className="section-head">
-        <span className="section-label">个人优势</span>
-        <h2>我擅长的方向</h2>
+        <span className="section-label">我能做的</span>
+        <h2>主要会这些</h2>
       </div>
       <div className="strengths-grid">
         {strengths.map((item) => (

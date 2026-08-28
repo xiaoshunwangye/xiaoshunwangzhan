@@ -23,7 +23,7 @@ const cardData = [
   {
     color: 'transparent',
     title: 'Midjourney / Stable Diffusion',
-    description: 'AI 绘图 / 提示词工程 / 素材生成',
+    description: '辅助出图找灵感 / 素材参考',
     label: 'AI 工具'
   },
   {
