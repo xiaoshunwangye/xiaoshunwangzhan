@@ -7,16 +7,11 @@
     <meta name="description" content="平面设计 · 电商视觉 · 短视频内容 · AI 辅助 — 用电商视觉与短视频内容讲好产品故事" />
     <meta name="color-scheme" content="dark" />
 
-    <!-- 禁止 CDN/浏览器缓存，确保所有用户看到最新版本 -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-
-    <!-- 关键资源预连接 -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- 说明：构建产物文件名自带 hash，资源可安全长缓存；HTML 由托管平台短缓存。
+         不再用 no-store 强制每次全量重下（会拖慢二次访问数秒）。 -->
 
     <!-- 视频海报图预加载（首屏可见） -->
+    <link rel="preload" as="image" href="%BASE_URL%wanhuatong.png" fetchpriority="low" />
     <link rel="preload" as="image" href="%BASE_URL%IMG_3602.JPG" fetchpriority="high" />
 
     <!-- 视频不预加载，避免阻塞首屏渲染（微信/QQ 内置浏览器对视频预加载支持差） -->

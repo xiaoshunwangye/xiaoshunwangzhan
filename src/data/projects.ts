@@ -30,11 +30,11 @@ export const projects: Project[] = [
     stack: ['Photoshop', 'Illustrator', '详情页排版', '活动海报'],
     coverGradient: 'linear-gradient(135deg, #EC4899 0%, #F59E0B 100%)',
     coverIcon: '🛍️',
-    coverImg: asset('/works/mobile-b08-thumb.jpg'),
+    coverImg: asset('/works/mobile-b08-thumb.webp'),
     galleryImgs: [
-      asset('/works/main-b08.jpg'),
-      asset('/works/mobile-c09.jpg'),
-      asset('/works/detail-c09.jpg'),
+      asset('/works/main-b08.webp'),
+      asset('/works/mobile-c09.webp'),
+      asset('/works/detail-c09.webp'),
     ],
     galleryCaptions: [
       '店铺主图方案',
@@ -58,10 +58,10 @@ export const projects: Project[] = [
     stack: ['Photoshop', '色彩构成', '产品精修', '调色'],
     coverGradient: 'linear-gradient(135deg, #10B981 0%, #06B6D4 100%)',
     coverIcon: '🎨',
-    coverImg: asset('/works/page-c09-thumb.jpg'),
+    coverImg: asset('/works/page-c09-thumb.webp'),
     galleryImgs: [
-      asset('/works/page-c09.jpg'),
-      asset('/works/detail-c09b.jpg'),
+      asset('/works/page-c09.webp'),
+      asset('/works/detail-c09b.webp'),
     ],
     galleryCaptions: [
       '产品详情页修图前后',
@@ -84,13 +84,13 @@ export const projects: Project[] = [
     stack: ['版式设计', '节日海报', '促销视觉', '素材管理'],
     coverGradient: 'linear-gradient(135deg, #F59E0B 0%, #EF4444 100%)',
     coverIcon: '🎉',
-    coverImg: asset('/works/poster-warm-thumb.jpg'),
+    coverImg: asset('/works/poster-warm-thumb.webp'),
     galleryImgs: [
-      asset('/works/detail-b08.jpg'),
-      asset('/works/detail-c08.jpg'),
-      asset('/works/poster-wide.jpg'),
-      asset('/works/poster-c08.jpg'),
-      asset('/works/poster-dark.jpg'),
+      asset('/works/detail-b08.webp'),
+      asset('/works/detail-c08.webp'),
+      asset('/works/poster-wide.webp'),
+      asset('/works/poster-c08.webp'),
+      asset('/works/poster-dark.webp'),
     ],
     galleryCaptions: [
       '瑞幸联名活动海报',
@@ -117,7 +117,8 @@ export const projects: Project[] = [
     stack: ['剪映', 'After Effects', '产品拍摄', '动态字幕'],
     coverGradient: 'linear-gradient(135deg, #06B6D4 0%, #3B82F6 50%, #8B5CF6 100%)',
     coverIcon: '🎬',
-    coverVideo: asset('/hero-video.mp4'),
+    // 与 Hero 背景分开：卡片/弹窗用较小规格，滚动到作品区才下载
+    coverVideo: asset('/works/short-video.mp4'),
     highlights: [
       '用剪映和 AE 剪了几条短视频，加了字幕和转场',
       '根据产品特点调整视频节奏，让画面更符合平台用户习惯',
@@ -169,12 +170,12 @@ export const projects: Project[] = [
     stack: ['Photoshop', 'Illustrator', '版式设计', '色彩构成'],
     coverGradient: 'linear-gradient(135deg, #64748B 0%, #94A3B8 100%)',
     coverIcon: '📚',
-    coverImg: asset('/works/poster-c09-thumb.jpg'),
+    coverImg: asset('/works/poster-c09-thumb.webp'),
     galleryImgs: [
-      asset('/works/poster-c09.jpg'),
-      asset('/works/poster-light.jpg'),
-      asset('/works/mobile-b08.jpg'),
-      asset('/works/mobile-c09.jpg'),
+      asset('/works/poster-c09.webp'),
+      asset('/works/poster-light.webp'),
+      asset('/works/mobile-b08.webp'),
+      asset('/works/mobile-c09.webp'),
     ],
     galleryCaptions: [
       '课程作业·海报设计',

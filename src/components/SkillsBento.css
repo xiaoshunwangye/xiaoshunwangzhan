@@ -81,9 +81,9 @@
 }
 
 .skill-level-dot.is-filled {
-  background: linear-gradient(135deg, #8B5CF6, #06B6D4);
+  background: linear-gradient(135deg, #b8860b, #EAB308);
   border-color: transparent;
-  box-shadow: 0 0 8px rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 8px rgba(184, 134, 11, 0.5);
 }
 
 .skill-level-text {

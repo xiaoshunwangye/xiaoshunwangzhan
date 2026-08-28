@@ -58,9 +58,7 @@ a {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 10% 10%, rgba(62, 160, 255, 0.22), transparent 18%),
-    radial-gradient(circle at 80% 24%, rgba(255, 121, 168, 0.12), transparent 16%),
-    linear-gradient(180deg, rgba(15, 23, 38, 0.9), rgba(5, 6, 9, 1));
+  background: linear-gradient(180deg, rgba(5, 6, 9, 0.8) 0%, rgba(5, 6, 9, 1) 100%);
   z-index: 0;
   pointer-events: none;
 }
@@ -68,9 +66,9 @@ a {
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top left, rgba(120, 200, 255, 0.16), transparent 30%),
-    linear-gradient(180deg, rgba(5, 6, 9, 0.72), rgba(5, 6, 9, 0.94));
+  background: linear-gradient(180deg, rgba(5, 6, 9, 0.5) 0%, rgba(5, 6, 9, 0.9) 100%);
   z-index: 1;
+  pointer-events: none;
 }
 
 /* Android 微信 X5 内核点击播放引导层 */
@@ -249,9 +247,7 @@ a {
   padding: 90px 60px;
   display: flex;
   flex-direction: column;
-  gap: 100px;
-  overflow: hidden;
-  background: #050609;
+  background: transparent;
 }
 
 .ferrofluid-wrapper {
@@ -262,16 +258,25 @@ a {
   bottom: 0;
   z-index: 0;
   pointer-events: none;
+  min-height: 100vh;
 }
 
+/* 画布为视口大小的绝对定位层，容器内平移跟随滚动 */
 .ferrofluid-wrapper .ferrofluid-container {
+  position: relative;
   width: 100%;
   height: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+  contain: layout paint style;
 }
 
 .page-content-inner {
   position: relative;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
 }
 
 .content-section {
@@ -355,7 +360,7 @@ a {
   font-size: 0.9rem;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: #06b6d4;
+  color: #b8860b;
   margin-bottom: 16px;
 }
 
@@ -369,7 +374,7 @@ a {
 }
 
 .contact-wrap p {
-  color: #06b6d4;
+  color: #b8860b;
   margin: 10px 0;
   font-size: 1.05rem;
   font-weight: 400;
@@ -529,7 +534,9 @@ a {
   border-radius: 50%;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.12);
-  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.04), transparent 40%), url('/IMG_3602.JPG') center/cover no-repeat;
+  /* 头像地址用变量注入，兼容 GitHub Pages 子目录部署 */
+  background: radial-gradient(circle at 30% 20%, rgba(255, 255, 255, 0.04), transparent 40%),
+    var(--avatar-url, url('/IMG_3602.JPG')) center/cover no-repeat;
 }
 
 .profile-copy h3 {
@@ -720,15 +727,15 @@ a {
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #06B6D4, #8B5CF6);
-  box-shadow: 0 0 0 4px rgba(6, 182, 212, 0.15);
+  background: linear-gradient(135deg, #b8860b, #EAB308);
+  box-shadow: 0 0 0 4px rgba(184, 134, 11, 0.15);
 }
 
 .timeline-period {
   display: inline-block;
   font-size: 0.85rem;
   letter-spacing: 0.12em;
-  color: #06b6d4;
+  color: #b8860b;
   margin-bottom: 8px;
 }
 
@@ -768,12 +775,12 @@ a {
 }
 
 .timeline-item:focus-visible {
-  outline: 2px solid rgba(6, 182, 212, 0.6);
+  outline: 2px solid rgba(184, 134, 11, 0.6);
   outline-offset: 4px;
 }
 
 .timeline-item.is-expanded {
-  background: rgba(6, 182, 212, 0.04);
+  background: rgba(184, 134, 11, 0.04);
 }
 
 .timeline-collapsible {
@@ -1057,16 +1064,16 @@ a {
 }
 
 .project-filter-btn:hover {
-  border-color: rgba(6, 182, 212, 0.4);
+  border-color: rgba(184, 134, 11, 0.4);
   color: #f0f9ff;
-  background: rgba(6, 182, 212, 0.08);
+  background: rgba(184, 134, 11, 0.08);
 }
 
 .project-filter-btn.is-active {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(139, 92, 246, 0.25));
-  border-color: rgba(6, 182, 212, 0.6);
+  background: linear-gradient(135deg, rgba(184, 134, 11, 0.25), rgba(234, 179, 8, 0.25));
+  border-color: rgba(184, 134, 11, 0.6);
   color: #f0f9ff;
-  box-shadow: 0 0 20px rgba(6, 182, 212, 0.2);
+  box-shadow: 0 0 20px rgba(184, 134, 11, 0.2);
 }
 
 .project-filter-count {
@@ -1082,7 +1089,7 @@ a {
 }
 
 .project-filter-btn.is-active .project-filter-count {
-  background: rgba(6, 182, 212, 0.3);
+  background: rgba(184, 134, 11, 0.3);
   color: #f0f9ff;
 }
 
@@ -1131,7 +1138,7 @@ a {
 }
 
 .project-cover-btn:focus-visible {
-  outline: 3px solid rgba(6, 182, 212, 0.8);
+  outline: 3px solid rgba(184, 134, 11, 0.8);
   outline-offset: 4px;
 }
 
@@ -1358,11 +1365,11 @@ a {
   display: inline-flex;
   align-items: center;
   padding: 4px 12px;
-  background: rgba(6, 182, 212, 0.12);
-  border: 1px solid rgba(6, 182, 212, 0.25);
+  background: rgba(184, 134, 11, 0.12);
+  border: 1px solid rgba(184, 134, 11, 0.25);
   border-radius: 20px;
   font-size: 0.75rem;
-  color: #67e8f9;
+  color: #fcd34d;
   letter-spacing: 0.04em;
 }
 
@@ -1380,7 +1387,7 @@ a {
   padding: 16px 20px;
   background: rgba(255, 255, 255, 0.015);
   border-radius: 10px;
-  border-left: 2px solid rgba(6, 182, 212, 0.4);
+  border-left: 2px solid rgba(184, 134, 11, 0.4);
 }
 
 .project-detail h4 {
@@ -1435,7 +1442,7 @@ a {
   align-items: center;
   padding: 10px 22px;
   border-radius: 999px;
-  background: linear-gradient(135deg, #06B6D4, #8B5CF6);
+  background: linear-gradient(135deg, #b8860b, #EAB308);
   color: #fff;
   font-size: 0.92rem;
   font-weight: 500;
@@ -1446,7 +1453,7 @@ a {
 
 .project-detail-btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.35);
+  box-shadow: 0 8px 24px rgba(184, 134, 11, 0.35);
 }
 
 .project-detail-btn--ghost {
@@ -1456,8 +1463,8 @@ a {
 }
 
 .project-detail-btn--ghost:hover {
-  border-color: rgba(6, 182, 212, 0.6);
-  background: rgba(6, 182, 212, 0.08);
+  border-color: rgba(184, 134, 11, 0.6);
+  background: rgba(184, 134, 11, 0.08);
   box-shadow: none;
 }
 

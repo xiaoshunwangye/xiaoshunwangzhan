@@ -34,14 +34,28 @@ export default defineConfig(({ mode }) => {
       target: "es2020",
       cssCodeSplit: true,
       sourcemap: false,
+      // 小图标/小图内联，减少请求数
+      assetsInlineLimit: 2048,
+      chunkSizeWarningLimit: 900,
+      reportCompressedSize: false,
       rollupOptions: {
         output: {
-          // 拆分 GSAP 和 OGL 到独立 chunk，便于浏览器并行下载与缓存
+          // 拆分 react / gsap / ogl 到独立 chunk：浏览器并行下载 + 长期缓存，
+          // 业务代码改动时这几个 chunk 的缓存不会失效
           manualChunks: {
-            gsap: ["gsap"],
+            react: ["react", "react-dom"],
+            gsap: ["gsap", "gsap/ScrollTrigger"],
             ogl: ["ogl"],
           },
         },
+      },
+    },
+    esbuild: {
+      legalComments: "none",
+    },
+    server: {
+      watch: {
+        ignored: ["**/public_original_backup/**"],
       },
     },
   };

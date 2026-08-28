@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type CSSProperties } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import BorderGlow from './BorderGlow';
@@ -195,7 +195,10 @@ const Experience = () => {
           fillOpacity={0}
         >
           <div className="profile-card">
-            <div className="avatar" />
+            <div
+              className="avatar"
+              style={{ '--avatar-url': `url(${import.meta.env.BASE_URL}IMG_3602.JPG)` } as CSSProperties}
+            />
             <div className="profile-copy">
               <h3>杨大顺</h3>
               <p>

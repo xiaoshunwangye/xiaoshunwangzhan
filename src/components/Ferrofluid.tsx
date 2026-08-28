@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+﻿import React, { useEffect, useRef } from 'react';
 import { Renderer, Program, Mesh, Triangle } from 'ogl';
 import './Ferrofluid.css';
 
@@ -17,7 +17,7 @@ const prepColors = (input: string[]) => {
   const count = base.length;
   const arr: number[][] = [];
   for (let i = 0; i < MAX_COLORS; i++) arr.push(hexToRGB(base[Math.min(i, base.length - 1)]));
-  const avg = [0, 0, 0];
+  const avg: number[] = [0, 0, 0];
   for (let i = 0; i < count; i++) {
     avg[0] += arr[i][0];
     avg[1] += arr[i][1];
@@ -29,7 +29,7 @@ const prepColors = (input: string[]) => {
   return { arr, count, avg };
 };
 
-const flowVec = (d: string) => {
+const flowVec = (d: string): [number, number] => {
   switch (d) {
     case 'up': return [0, 1];
     case 'down': return [0, -1];
@@ -209,35 +209,23 @@ const Ferrofluid: React.FC<FerrofluidProps> = ({
   className,
   dpr,
   paused = false,
-  colors = ['#4F46E5', '#06B6D4', '#E0F2FE'],
+  colors = ['#ffffff', '#ffffff', '#ffffff'],
   speed = 0.5,
-  scale = 1.6,
+  scale = 1,
   turbulence = 1,
   fluidity = 0.1,
   rimWidth = 0.2,
-  sharpness = 2.5,
-  shimmer = 1.5,
+  sharpness = 3,
+  shimmer = 1,
   glow = 2,
   flowDirection = 'down',
   opacity = 1,
   mouseInteraction = true,
   mouseStrength = 1,
-  mouseRadius = 0.35,
+  mouseRadius = 0.3,
   mouseDampening = 0.15,
   mixBlendMode
 }) => {
-  // 检测设备性能，低性能设备降低 DPR 和动画质量
-  const getOptimalDPR = (userDPR?: number) => {
-    const hardwareConcurrency = navigator.hardwareConcurrency || 4;
-    const hasLowMemory = (navigator as any).deviceMemory !== undefined && (navigator as any).deviceMemory < 4;
-    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-    const baseDPR = userDPR ?? Math.min(window.devicePixelRatio || 1, 1.5);
-    // 低性能设备：移动端 / 低内存 / 少核心
-    if (hasLowMemory || (isMobile && hardwareConcurrency < 6)) {
-      return Math.min(baseDPR, 1);
-    }
-    return baseDPR;
-  };
   const containerRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number | null>(null);
   const programRef = useRef<any>(null);
@@ -247,25 +235,33 @@ const Ferrofluid: React.FC<FerrofluidProps> = ({
   const mouseTargetRef = useRef([0, 0]);
   const lastTimeRef = useRef(0);
 
+  const colorsRef = useRef(colors);
+  colorsRef.current = colors;
+  const colorKey = colors.join('|');
+
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
+    if (container.offsetHeight === 0) {
+      container.style.minHeight = '100vh';
+    }
+
     const renderer = new Renderer({
-      dpr: getOptimalDPR(dpr),
+      dpr: dpr ?? (typeof window !== 'undefined' ? window.devicePixelRatio || 1 : 1),
       alpha: true,
-      antialias: false
+      antialias: true
     });
     rendererRef.current = renderer;
     const gl = renderer.gl;
-    const canvas = gl.canvas;
+    const canvas = gl.canvas as HTMLCanvasElement;
     gl.clearColor(0, 0, 0, 0);
     canvas.style.width = '100%';
     canvas.style.height = '100%';
     canvas.style.display = 'block';
     container.appendChild(canvas);
 
-    const { arr, count, avg } = prepColors(colors);
+    const { arr, count, avg } = prepColors(colorsRef.current);
 
     const uniforms: any = {
       iResolution: { value: [gl.drawingBufferWidth, gl.drawingBufferHeight, 1] },
@@ -314,54 +310,23 @@ const Ferrofluid: React.FC<FerrofluidProps> = ({
     const ro = new ResizeObserver(resize);
     ro.observe(container);
 
-    // 可见性检测：不可见时暂停渲染，节省 GPU
-    let isVisible = true;
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          isVisible = entry.isIntersecting;
-        }
-      },
-      { rootMargin: '50px' }
-    );
-    io.observe(container);
-
-    // pointermove 节流：每帧最多更新一次目标位置
-    let pendingPointer: { x: number; y: number } | null = null;
     const onPointerMove = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       const sc = renderer.dpr || 1;
-      pendingPointer = {
-        x: (e.clientX - rect.left) * sc,
-        y: (rect.height - (e.clientY - rect.top)) * sc
-      };
+      const x = (e.clientX - rect.left) * sc;
+      const y = (rect.height - (e.clientY - rect.top)) * sc;
+      mouseTargetRef.current = [x, y];
+      if (mouseDampening <= 0) {
+        uniforms.iMouse.value = [x, y];
+      }
     };
     if (mouseInteraction) {
-      canvas.addEventListener('pointermove', onPointerMove, { passive: true });
+      canvas.addEventListener('pointermove', onPointerMove);
     }
 
     const loop = (t: number) => {
       rafRef.current = requestAnimationFrame(loop);
-      // 不可见时跳过渲染，但仍保持 RAF 以便恢复时无缝继续
-      if (!isVisible) return;
-
-      // 节流：低性能设备或移动端限制到 30fps，降低 GPU 负载
-      const lastRender = (loop as any).__lastRender || 0;
-      const fpsLimit = 1000 / 60; // 默认 60fps，可进一步降低
-      if (t - lastRender < fpsLimit) return;
-      (loop as any).__lastRender = t;
-
       uniforms.iTime.value = t * 0.001;
-
-      // 应用节流后的指针位置
-      if (pendingPointer) {
-        mouseTargetRef.current = [pendingPointer.x, pendingPointer.y];
-        if (mouseDampening <= 0) {
-          uniforms.iMouse.value = [pendingPointer.x, pendingPointer.y];
-        }
-        pendingPointer = null;
-      }
-
       if (mouseDampening > 0) {
         if (!lastTimeRef.current) lastTimeRef.current = t;
         const dt = (t - lastTimeRef.current) / 1000;
@@ -380,7 +345,7 @@ const Ferrofluid: React.FC<FerrofluidProps> = ({
         try {
           renderer.render({ scene: meshRef.current });
         } catch (e) {
-          console.error(e);
+          console.error('[Ferrofluid] Render error:', e);
         }
       }
     };
@@ -390,7 +355,6 @@ const Ferrofluid: React.FC<FerrofluidProps> = ({
       if (rafRef.current) cancelAnimationFrame(rafRef.current);
       if (mouseInteraction) canvas.removeEventListener('pointermove', onPointerMove);
       ro.disconnect();
-      io.disconnect();
       if (canvas.parentElement === container) {
         container.removeChild(canvas);
       }
@@ -412,7 +376,7 @@ const Ferrofluid: React.FC<FerrofluidProps> = ({
   }, [
     dpr,
     paused,
-    colors,
+    colorKey,
     speed,
     scale,
     turbulence,

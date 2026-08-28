@@ -64,13 +64,7 @@ const BorderGlow = ({
 }) => {
   const cardRef = useRef(null);
 
-  const getCenterOfElement = useCallback((el) => {
-    const { width, height } = el.getBoundingClientRect();
-    return [width / 2, height / 2];
-  }, []);
-
-  const getEdgeProximity = useCallback((el, x, y) => {
-    const [cx, cy] = getCenterOfElement(el);
+  const getEdgeProximity = useCallback((cx, cy, x, y) => {
     const dx = x - cx;
     const dy = y - cy;
     let kx = Infinity;
@@ -78,10 +72,9 @@ const BorderGlow = ({
     if (dx !== 0) kx = cx / Math.abs(dx);
     if (dy !== 0) ky = cy / Math.abs(dy);
     return Math.min(Math.max(1 / Math.min(kx, ky), 0), 1);
-  }, [getCenterOfElement]);
+  }, []);
 
-  const getCursorAngle = useCallback((el, x, y) => {
-    const [cx, cy] = getCenterOfElement(el);
+  const getCursorAngle = useCallback((cx, cy, x, y) => {
     const dx = x - cx;
     const dy = y - cy;
     if (dx === 0 && dy === 0) return 0;
@@ -89,29 +82,44 @@ const BorderGlow = ({
     let degrees = radians * (180 / Math.PI) + 90;
     if (degrees < 0) degrees += 360;
     return degrees;
-  }, [getCenterOfElement]);
+  }, []);
 
-  const lastMoveRef = useRef(0);
+  const pendingPointRef = useRef(null);
+  const pointerRafRef = useRef(0);
+  const lastEdgeRef = useRef(0);
 
-  const handlePointerMove = useCallback((e) => {
+  // rAF 节流：一帧最多计算一次；只有指针靠近卡片边缘（发光可见）时才写样式
+  const applyPointer = useCallback(() => {
+    pointerRafRef.current = 0;
     const card = cardRef.current;
-    if (!card) return;
-
-    // 节流：最多每 16ms 更新一次（~60fps），避免大量 DOM 操作
-    const now = performance.now();
-    if (now - lastMoveRef.current < 16) return;
-    lastMoveRef.current = now;
+    const point = pendingPointRef.current;
+    if (!card || !point) return;
 
     const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    const x = point.x - rect.left;
+    const y = point.y - rect.top;
+    const edge = getEdgeProximity(rect.width / 2, rect.height / 2, x, y);
 
-    const edge = getEdgeProximity(card, x, y);
-    const angle = getCursorAngle(card, x, y);
+    // 边缘发光在 edge <= 0.3 时完全不可见，此时无需触发重绘
+    if (edge <= 0.3 && lastEdgeRef.current <= 0.3) return;
+    lastEdgeRef.current = edge;
 
+    const angle = getCursorAngle(rect.width / 2, rect.height / 2, x, y);
     card.style.setProperty('--edge-proximity', `${(edge * 100).toFixed(3)}`);
     card.style.setProperty('--cursor-angle', `${angle.toFixed(3)}deg`);
   }, [getEdgeProximity, getCursorAngle]);
+
+  const handlePointerMove = useCallback((e) => {
+    pendingPointRef.current = { x: e.clientX, y: e.clientY };
+    if (!pointerRafRef.current) pointerRafRef.current = requestAnimationFrame(applyPointer);
+  }, [applyPointer]);
+
+  useEffect(
+    () => () => {
+      if (pointerRafRef.current) cancelAnimationFrame(pointerRafRef.current);
+    },
+    []
+  );
 
   useEffect(() => {
     if (!animated || !cardRef.current) return;

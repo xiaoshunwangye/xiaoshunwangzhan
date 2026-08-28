@@ -2,10 +2,9 @@ import { useEffect, useRef } from 'react';
 import SpecularButton from './SpecularButton';
 import PillNav from './PillNav';
 import AudioPlayer from './AudioPlayer';
+import SideRays from './SideRays';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import heroVideoUrl from '/hero-video.mp4?url';
-import heroPosterUrl from '/IMG_3602.JPG?url';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -43,28 +42,6 @@ const Hero = () => {
       delay: 1.5
     });
 
-    // Autoplay fallback: 浏览器自动播放策略阻止时，在首次用户交互后播放
-    const video = hero.querySelector('video');
-    if (video) {
-      // 视频 preload="none"，首次用户交互时触发加载
-      const handleLoad = () => {
-        const playPromise = video.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {});
-        }
-        video.removeEventListener('loadeddata', handleLoad);
-      };
-      video.addEventListener('loadeddata', handleLoad);
-
-      // 监听首次用户交互触发视频加载
-      const events: Array<keyof DocumentEventMap> = ['click', 'touchstart', 'scroll', 'keydown'];
-      const onUserInteract = () => {
-        video?.play().catch(() => {});
-        events.forEach((evt) => document.removeEventListener(evt, onUserInteract));
-      };
-      events.forEach((evt) => document.addEventListener(evt, onUserInteract, { once: true, passive: true }));
-    }
-
     return () => {
       tl.kill();
     };
@@ -72,25 +49,19 @@ const Hero = () => {
 
   return (
     <section className="hero-section" ref={heroRef}>
-      <video
-        className="hero-video"
-        src={heroVideoUrl}
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="none"
-        poster={heroPosterUrl}
-        disablePictureInPicture
-        disableRemotePlayback
-        x5-video-player-type="h5"
-        x5-video-orientation="portrait"
-        x5-playsinline="true"
-        webkit-playsinline="true"
-        onContextMenu={(e) => e.preventDefault()}
-      >
-        <source src={heroVideoUrl} type="video/mp4" />
-      </video>
+      <SideRays
+        speed={2.5}
+        rayColor1="#EAB308"
+        rayColor2="#96c8ff"
+        intensity={2}
+        spread={2}
+        origin="top-right"
+        tilt={0}
+        saturation={1.5}
+        blend={0.75}
+        falloff={1.6}
+        opacity={1.0}
+      />
       <div className="hero-overlay" />
       <div className="hero-inner">
         <header className="hero-nav">

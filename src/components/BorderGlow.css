@@ -10,7 +10,8 @@
   position: relative;
   border-radius: var(--border-radius);
   isolation: isolate;
-  transform: translate3d(0, 0, 0.01px);
+  /* 不再强制 translate3d：避免为页面上几十张卡片各建一个合成层，
+     isolation: isolate 已提供所需的层叠上下文 */
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   width: 100%;
@@ -38,6 +39,12 @@
 .border-glow-card:not(:hover):not(.sweep-active) > .edge-light {
   opacity: 0;
   transition: opacity 0.75s ease-in-out;
+}
+
+/* 仅在悬停期间把发光层提升为合成层，避免常驻几十个合成层 */
+.border-glow-card:hover::before,
+.border-glow-card:hover > .edge-light {
+  will-change: opacity;
 }
 
 /* colored mesh-gradient border */

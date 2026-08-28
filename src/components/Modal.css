@@ -46,8 +46,8 @@
 }
 
 .modal-close:hover {
-  background: rgba(6, 182, 212, 0.16);
-  border-color: rgba(6, 182, 212, 0.4);
+  background: rgba(184, 134, 11, 0.16);
+  border-color: rgba(184, 134, 11, 0.4);
   transform: rotate(90deg);
 }
 
@@ -138,7 +138,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #6366F1, #06B6D4);
+  background: linear-gradient(135deg, #b8860b, #EAB308);
   border-radius: 50%;
   font-size: 0.75rem;
   font-weight: 600;
@@ -194,13 +194,13 @@
 }
 
 .project-gallery-tab:hover {
-  background: rgba(6, 182, 212, 0.12);
-  border-color: rgba(6, 182, 212, 0.3);
+  background: rgba(184, 134, 11, 0.12);
+  border-color: rgba(184, 134, 11, 0.3);
 }
 
 .project-gallery-tab.is-active {
-  background: linear-gradient(135deg, rgba(6, 182, 212, 0.2), rgba(59, 130, 246, 0.2));
-  border-color: rgba(6, 182, 212, 0.5);
+  background: linear-gradient(135deg, rgba(184, 134, 11, 0.2), rgba(234, 179, 8, 0.2));
+  border-color: rgba(184, 134, 11, 0.5);
   color: #f0f9ff;
 }
 
@@ -226,8 +226,8 @@
 }
 
 .project-gallery-btn:hover:not(:disabled) {
-  background: rgba(6, 182, 212, 0.2);
-  border-color: rgba(6, 182, 212, 0.4);
+  background: rgba(184, 134, 11, 0.2);
+  border-color: rgba(184, 134, 11, 0.4);
 }
 
 .project-gallery-btn:disabled {

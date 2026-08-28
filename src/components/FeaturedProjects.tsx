@@ -17,10 +17,54 @@ const CATEGORY_GRADIENT_COLORS: Record<ProjectCategory, string[]> = {
   '课程实践': ['#10B981', '#06B6D4', '#3B82F6'],
 };
 
+/**
+ * 封面视频：进入视口才开始加载并播放，离开视口暂停。
+ * 避免页面一打开就把 8MB 的 hero-video 拉下来并常驻解码。
+ */
+const ProjectCoverVideo = ({ src, poster, label }: { src: string; poster?: string; label: string }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const io = new IntersectionObserver(
+      entries => {
+        const entry = entries[0];
+        if (entry.isIntersecting) {
+          if (!video.src) video.src = src;
+          const p = video.play();
+          if (p !== undefined) p.catch(() => {});
+        } else if (!video.paused) {
+          video.pause();
+        }
+      },
+      { rootMargin: '200px' }
+    );
+    io.observe(video);
+
+    return () => io.disconnect();
+  }, [src]);
+
+  return (
+    <video
+      ref={videoRef}
+      className="project-cover-video"
+      poster={poster}
+      muted
+      loop
+      playsInline
+      preload="none"
+      aria-label={label}
+    />
+  );
+};
+
 const FeaturedProjects = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const [filter, setFilter] = useState<FilterValue>('all');
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const isFirstFilterRender = useRef(true);
 
   const filteredProjects = useMemo(() => {
     if (filter === 'all') return projects;
@@ -74,12 +118,17 @@ const FeaturedProjects = () => {
     return () => ctx.revert();
   }, []);
 
-  // 筛选切换时卡片：先淡出，再错开淡入
+  // 筛选切换时卡片：先淡出，再错开淡入（首屏直接呈现，避免多余的一次闪烁）
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
     const cards = section.querySelectorAll('.projects-grid > article');
     if (cards.length === 0) return;
+
+    if (isFirstFilterRender.current) {
+      isFirstFilterRender.current = false;
+      return;
+    }
 
     const tl = gsap.timeline({
       onComplete: () => {
@@ -142,14 +191,10 @@ const FeaturedProjects = () => {
                 aria-label={`查看 ${item.title} 详情`}
               >
                 {item.coverVideo ? (
-                  <video
+                  <ProjectCoverVideo
                     src={item.coverVideo}
-                    className="project-cover-video"
-                    muted
-                    loop
-                    autoPlay
-                    playsInline
                     poster={item.coverImg || undefined}
+                    label={item.title}
                   />
                 ) : item.coverImg ? (
                   <img
@@ -157,6 +202,7 @@ const FeaturedProjects = () => {
                     alt={item.title}
                     className="project-cover-img"
                     loading="lazy"
+                    decoding="async"
                   />
                 ) : (
                   <span className="project-cover-icon">{item.coverIcon}</span>
@@ -206,6 +252,7 @@ const FeaturedProjects = () => {
                   loop
                   autoPlay
                   playsInline
+                  preload="metadata"
                 />
               </div>
             ) : activeProject.coverImg ? (
@@ -247,6 +294,7 @@ const FeaturedProjects = () => {
                           alt={`${activeProject.title} 作品图 ${i + 1}`}
                           className="project-gallery-img"
                           loading="lazy"
+                          decoding="async"
                           onClick={() => window.open(src, '_blank')}
                           role="button"
                           tabIndex={0}
