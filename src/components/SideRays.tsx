@@ -2,12 +2,12 @@ import { useRef, useEffect, useState } from 'react';
 import { Renderer, Program, Triangle, Mesh } from 'ogl';
 import './SideRays.css';
 
-const hexToRgb = hex => {
+const hexToRgb = (hex: string): [number, number, number] => {
   const m = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
   return m ? [parseInt(m[1], 16) / 255, parseInt(m[2], 16) / 255, parseInt(m[3], 16) / 255] : [1, 1, 1];
 };
 
-const originToFlip = origin => {
+const originToFlip = (origin: string): [number, number] => {
   switch (origin) {
     case 'top-left': return [1, 0];
     case 'bottom-right': return [0, 1];
@@ -30,14 +30,29 @@ const SideRays = ({
   opacity = 1.0,
   className = ''
 }) => {
-  const containerRef = useRef(null);
-  const uniformsRef = useRef(null);
-  const rendererRef = useRef(null);
-  const animationIdRef = useRef(null);
-  const meshRef = useRef(null);
-  const cleanupFunctionRef = useRef(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const uniformsRef = useRef<{
+    iTime: { value: number };
+    iResolution: { value: number[] };
+    iSpeed: { value: number };
+    iRayColor1: { value: [number, number, number] };
+    iRayColor2: { value: [number, number, number] };
+    iIntensity: { value: number };
+    iSpread: { value: number };
+    iFlipX: { value: number };
+    iFlipY: { value: number };
+    iTilt: { value: number };
+    iSaturation: { value: number };
+    iBlend: { value: number };
+    iFalloff: { value: number };
+    iOpacity: { value: number };
+  } | null>(null);
+  const rendererRef = useRef<Renderer | null>(null);
+  const animationIdRef = useRef<number | null>(null);
+  const meshRef = useRef<Mesh | null>(null);
+  const cleanupFunctionRef = useRef<(() => void) | null>(null);
   const [isVisible, setIsVisible] = useState(false);
-  const observerRef = useRef(null);
+  const observerRef = useRef<IntersectionObserver | null>(null);
 
   useEffect(() => {
     if (!containerRef.current) return;
@@ -189,7 +204,7 @@ void main() {
         uniforms.iResolution.value = [w * renderer.dpr, h * renderer.dpr];
       };
 
-      const loop = t => {
+      const loop = (t: number) => {
         if (!rendererRef.current || !uniformsRef.current || !meshRef.current) return;
         uniforms.iTime.value = t * 0.001;
         try {
