@@ -117,8 +117,6 @@ export const projects: Project[] = [
     stack: ['剪映', 'After Effects', '产品拍摄', '动态字幕'],
     coverGradient: 'linear-gradient(135deg, #06B6D4 0%, #3B82F6 50%, #8B5CF6 100%)',
     coverIcon: '🎬',
-    // 与 Hero 背景分开：卡片/弹窗用较小规格，滚动到作品区才下载
-    coverVideo: asset('/works/short-video.mp4'),
     highlights: [
       '用剪映和 AE 剪了几条短视频，加了字幕和转场',
       '根据产品特点调整视频节奏，让画面更符合平台用户习惯',

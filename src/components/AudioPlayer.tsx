@@ -27,6 +27,8 @@ const AudioPlayer = () => {
   const [volume, setVolume] = useState(0.5);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showPlaylist, setShowPlaylist] = useState(false);
+  // 播放模式：'order' 顺序播放 | 'random' 随机播放 | 'loop' 单曲循环
+  const [playMode, setPlayMode] = useState<'order' | 'random' | 'loop'>('order');
   const progressRef = useRef<HTMLDivElement>(null);
   const playlistRef = useRef<HTMLDivElement>(null);
 
@@ -77,8 +79,24 @@ const AudioPlayer = () => {
 
   const playNext = () => {
     if (playlist.length === 0) return;
-    const nextIndex = (currentIndex + 1) % playlist.length;
+    let nextIndex: number;
+    if (playlist.length === 1) {
+      nextIndex = 0;
+    } else if (playMode === 'random') {
+      // 随机播放：从除当前外的曲目中均匀抽取
+      do {
+        nextIndex = Math.floor(Math.random() * playlist.length);
+      } while (nextIndex === currentIndex);
+    } else {
+      // 顺序播放：到达末尾后回到开头
+      nextIndex = (currentIndex + 1) % playlist.length;
+    }
     switchTrack(nextIndex);
+  };
+
+  const cyclePlayMode = () => {
+    // 顺序 -> 随机 -> 单曲循环 -> 顺序
+    setPlayMode((m) => (m === 'order' ? 'random' : m === 'random' ? 'loop' : 'order'));
   };
 
   useEffect(() => {
@@ -88,6 +106,13 @@ const AudioPlayer = () => {
     const updateTime = () => setCurrentTime(audio.currentTime);
     const updateDuration = () => setDuration(audio.duration || 0);
     const handleEnded = () => {
+      // 单曲循环：重新从头播放当前曲目
+      if (playMode === 'loop') {
+        audio.currentTime = 0;
+        audio.play().then(() => setIsPlaying(true)).catch(() => {});
+        return;
+      }
+      // 多首时按模式跳下一首；单首时停止
       if (playlist.length > 1) {
         playNext();
       } else {
@@ -179,7 +204,7 @@ const AudioPlayer = () => {
     <div 
       className={`audio-player ${isPlaying ? 'is-playing' : ''}`}
     >
-      <audio ref={audioRef} preload="metadata" loop={playlist.length === 1} />
+      <audio ref={audioRef} preload="metadata" />
       
       <button className={playBtnClass} onClick={togglePlay} aria-label={isPlaying ? '暂停' : '播放'}>
         <span className="play-btn-pulse" />
@@ -195,6 +220,42 @@ const AudioPlayer = () => {
             </svg>
           )}
         </span>
+      </button>
+
+      <button
+        className={`audio-mode-btn audio-mode-${playMode}`}
+        onClick={cyclePlayMode}
+        aria-label={playMode === 'order' ? '顺序播放' : playMode === 'random' ? '随机播放' : '单曲循环'}
+        title={playMode === 'order' ? '顺序播放' : playMode === 'random' ? '随机播放' : '单曲循环'}
+      >
+        {playMode === 'order' && (
+          // 顺序播放图标：循环箭头
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 5.5C2.5 3.5 4.2 2 6.5 2C8.8 2 10.5 3.5 11 5.5" />
+            <polyline points="9.5,1 11,5.5 6.5,5.5" />
+            <path d="M12 8.5C11.5 10.5 9.8 12 7.5 12C5.2 12 3.5 10.5 3 8.5" />
+            <polyline points="4.5,13 3,8.5 7.5,8.5" />
+          </svg>
+        )}
+        {playMode === 'random' && (
+          // 随机播放图标：交叉箭头
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+            <polyline points="2,3 4,3 11,11 11,9" />
+            <polyline points="11,3 9,3 2,11 2,9" />
+            <polyline points="11,1 13,3 11,5" />
+            <polyline points="3,9 1,11 3,13" />
+          </svg>
+        )}
+        {playMode === 'loop' && (
+          // 单曲循环图标：循环箭头 + 数字 1
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M2 6C2.5 4 4.2 2.5 6.5 2.5C8.8 2.5 10.5 4 11 6" />
+            <polyline points="9.5,1.5 11,6 6.5,6" />
+            <path d="M12 8C11.5 10 9.8 11.5 7.5 11.5C5.2 11.5 3.5 10 3 8" />
+            <polyline points="4.5,12.5 3,8 7.5,8" />
+            <text x="7" y="9.5" fontSize="5.5" fontWeight="700" fill="currentColor" stroke="none" textAnchor="middle">1</text>
+          </svg>
+        )}
       </button>
 
       <div className="audio-info-section">

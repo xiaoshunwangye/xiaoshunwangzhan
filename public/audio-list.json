@@ -1,6 +1,24 @@
 {
   "playlist": [
-    {"name": "踏浪", "src": "/audio/踏浪.mp3"},
-    {"name": "精卫", "src": "/audio/精卫.mp3"}
+    {
+      "name": "去年夏天",
+      "src": "/audio/去年夏天.mp3"
+    },
+    {
+      "name": "踏浪",
+      "src": "/audio/踏浪.mp3"
+    },
+    {
+      "name": "精卫",
+      "src": "/audio/精卫.mp3"
+    },
+    {
+      "name": "八年的爱",
+      "src": "/audio/八年的爱.mp3"
+    },
+    {
+      "name": "东京不太热",
+      "src": "/audio/东京不太热.mp3"
+    }
   ]
 }
