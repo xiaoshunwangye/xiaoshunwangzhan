@@ -18,6 +18,16 @@ const formatTime = (time: number): string => {
   return `${mins}:${secs.toString().padStart(2, '0')}`;
 };
 
+// Fisher–Yates 洗牌，返回索引的随机排列
+function buildShuffledIndices(length: number): number[] {
+  const arr = Array.from({ length }, (_, i) => i);
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
 const AudioPlayer = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [playlist, setPlaylist] = useState<Track[]>([]);
@@ -31,6 +41,12 @@ const AudioPlayer = () => {
   const [playMode, setPlayMode] = useState<'order' | 'random' | 'loop'>('order');
   const progressRef = useRef<HTMLDivElement>(null);
   const playlistRef = useRef<HTMLDivElement>(null);
+  // 用 ref 镜像最新 state，供 ended 事件回调读取（避免 useEffect 闭包过期）
+  const playModeRef = useRef<'order' | 'random' | 'loop'>('order');
+  // 随机模式的洗牌队列：保存"接下来要播的索引顺序"
+  const shuffleQueueRef = useRef<number[]>([]);
+  const playlistStateRef = useRef<Track[]>([]);
+  const currentIndexRef = useRef(0);
 
   const currentTrack = playlist[currentIndex];
 
@@ -66,6 +82,10 @@ const AudioPlayer = () => {
     const audio = audioRef.current;
     if (!audio || playlist.length === 0) return;
     setCurrentIndex(index);
+    // 随机模式下：把刚选中的曲目从洗牌队列移除，避免下一首又回到它
+    if (playMode === 'random') {
+      shuffleQueueRef.current = shuffleQueueRef.current.filter((i) => i !== index);
+    }
     audio.src = playlist[index].src;
     audio.load();
     // 等待音频数据就绪后再播放
@@ -83,10 +103,18 @@ const AudioPlayer = () => {
     if (playlist.length === 1) {
       nextIndex = 0;
     } else if (playMode === 'random') {
-      // 随机播放：从除当前外的曲目中均匀抽取
-      do {
-        nextIndex = Math.floor(Math.random() * playlist.length);
-      } while (nextIndex === currentIndex);
+      // 随机模式：从洗牌队列取下一首；队空则重洗
+      if (shuffleQueueRef.current.length === 0) {
+        shuffleQueueRef.current = buildShuffledIndices(playlist.length);
+        if (
+          shuffleQueueRef.current.length > 1 &&
+          shuffleQueueRef.current[0] === currentIndex
+        ) {
+          const first = shuffleQueueRef.current.shift()!;
+          shuffleQueueRef.current.push(first);
+        }
+      }
+      nextIndex = shuffleQueueRef.current.shift()!;
     } else {
       // 顺序播放：到达末尾后回到开头
       nextIndex = (currentIndex + 1) % playlist.length;
@@ -96,7 +124,24 @@ const AudioPlayer = () => {
 
   const cyclePlayMode = () => {
     // 顺序 -> 随机 -> 单曲循环 -> 顺序
-    setPlayMode((m) => (m === 'order' ? 'random' : m === 'random' ? 'loop' : 'order'));
+    setPlayMode((m) => {
+      const next = m === 'order' ? 'random' : m === 'random' ? 'loop' : 'order';
+      // 切到随机模式时：重置洗牌队列，并把当前曲目挪到队尾避免立刻重播
+      if (next === 'random') {
+        const list = playlistStateRef.current;
+        const cur = currentIndexRef.current;
+        const q = buildShuffledIndices(list.length);
+        if (q.length > 1 && q[0] === cur) {
+          const first = q.shift()!;
+          q.push(first);
+        }
+        shuffleQueueRef.current = q;
+      } else {
+        // 切出随机模式：清空队列
+        shuffleQueueRef.current = [];
+      }
+      return next;
+    });
   };
 
   useEffect(() => {
@@ -105,20 +150,6 @@ const AudioPlayer = () => {
 
     const updateTime = () => setCurrentTime(audio.currentTime);
     const updateDuration = () => setDuration(audio.duration || 0);
-    const handleEnded = () => {
-      // 单曲循环：重新从头播放当前曲目
-      if (playMode === 'loop') {
-        audio.currentTime = 0;
-        audio.play().then(() => setIsPlaying(true)).catch(() => {});
-        return;
-      }
-      // 多首时按模式跳下一首；单首时停止
-      if (playlist.length > 1) {
-        playNext();
-      } else {
-        setIsPlaying(false);
-      }
-    };
     const handleError = (e: Event) => {
       const audioEl = e.target as HTMLAudioElement;
       console.error('[AudioPlayer] error:', audioEl.error?.message, audioEl.error?.code);
@@ -126,7 +157,6 @@ const AudioPlayer = () => {
 
     audio.addEventListener('timeupdate', updateTime);
     audio.addEventListener('loadedmetadata', updateDuration);
-    audio.addEventListener('ended', handleEnded);
     audio.addEventListener('error', handleError);
 
     const handleClickOutside = (e: MouseEvent) => {
@@ -139,10 +169,57 @@ const AudioPlayer = () => {
     return () => {
       audio.removeEventListener('timeupdate', updateTime);
       audio.removeEventListener('loadedmetadata', updateDuration);
-      audio.removeEventListener('ended', handleEnded);
       audio.removeEventListener('error', handleError);
       document.removeEventListener('mousedown', handleClickOutside);
     };
+  }, []);
+
+  // 单独订阅 ended：用 ref 持有最新 state，避免 useEffect 闭包过期
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const handleEnded = () => {
+      // 单曲循环：重新从头播放当前曲目
+      if (playModeRef.current === 'loop') {
+        audio.currentTime = 0;
+        audio.play().then(() => setIsPlaying(true)).catch(() => {});
+        return;
+      }
+      const list = playlistStateRef.current;
+      if (list.length > 1) {
+        const mode = playModeRef.current;
+        const cur = currentIndexRef.current;
+        let nextIndex: number;
+        if (mode === 'random') {
+          // 洗牌队列为空 → 重新洗；如果队首就是当前曲目，把它挪到队尾
+          if (shuffleQueueRef.current.length === 0) {
+            shuffleQueueRef.current = buildShuffledIndices(list.length);
+            if (
+              shuffleQueueRef.current.length > 1 &&
+              shuffleQueueRef.current[0] === cur
+            ) {
+              const first = shuffleQueueRef.current.shift()!;
+              shuffleQueueRef.current.push(first);
+            }
+          }
+          nextIndex = shuffleQueueRef.current.shift()!;
+        } else {
+          nextIndex = (cur + 1) % list.length;
+        }
+        setCurrentIndex(nextIndex);
+        audio.src = list[nextIndex].src;
+        audio.load();
+        const onCanPlay = () => {
+          audio.removeEventListener('canplay', onCanPlay);
+          audio.play().then(() => setIsPlaying(true)).catch(() => {});
+        };
+        audio.addEventListener('canplay', onCanPlay);
+      } else {
+        setIsPlaying(false);
+      }
+    };
+    audio.addEventListener('ended', handleEnded);
+    return () => audio.removeEventListener('ended', handleEnded);
   }, []);
 
   useEffect(() => {
@@ -150,6 +227,17 @@ const AudioPlayer = () => {
       audioRef.current.volume = volume;
     }
   }, [volume]);
+
+  // 把 state 同步到 ref，给 ended 等只在挂载时订阅的回调读取最新值
+  useEffect(() => {
+    playModeRef.current = playMode;
+  }, [playMode]);
+  useEffect(() => {
+    playlistStateRef.current = playlist;
+  }, [playlist]);
+  useEffect(() => {
+    currentIndexRef.current = currentIndex;
+  }, [currentIndex]);
 
   const togglePlay = () => {
     const audio = audioRef.current;
